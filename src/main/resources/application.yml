@@ -21,11 +21,3 @@ spring:
     show-sql: true
   profiles:
     active: prod
-myapplication:
-  name: DEV- Spring boot example
-my:
-  message: DEV-Welcome to my ${myapplication.name} application
-  usercount: 300
-  contactinfo: DEV-updateduser@cravejava.in
-  env: DEV
-  thankyoumessage: Thank you for visiting
