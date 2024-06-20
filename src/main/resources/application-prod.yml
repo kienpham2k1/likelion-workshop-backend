@@ -7,22 +7,20 @@ logging:
       springframework: INFO
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/likelion-eshop
+    url: jdbc:postgresql://likelion-eshop.c3k4q404y59t.ap-south-1.rds.amazonaws.com:5432/likelion_eshop
     username: postgres
-    password: 12345
+    password: 12345678
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         use_nationalized_character_data: true
     show-sql: true
-  profiles:
-    active: prod
 myapplication:
-  name: DEV- Spring boot example
+  name: PROD- updated Spring boot example
 my:
   message: DEV-Welcome to my ${myapplication.name} application
   usercount: 300

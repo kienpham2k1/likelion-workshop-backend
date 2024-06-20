@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 public class HomeController {
-    @GetMapping("/get")
-    public  String get(){
-        return "abc";
+    @GetMapping
+    public String welcome() {
+        return "hello world";
     }
 }

@@ -21,8 +21,11 @@ public class Product {
     private String id;
     @Column(nullable = false)
     private String name;
-    //    @Column(nullable = false)
+//        @Column(nullable = false)
     private String description;
+    private String color;
+    private int size;
+    private int quantity;
     @Column(nullable = false)
     private double price;
     @Column(name = "category_id")
@@ -32,6 +35,4 @@ public class Product {
     private Category category;
     @OneToOne(mappedBy = "product")
     private OrderDetail orderDetail;
-    @ManyToMany(mappedBy = "products")
-    private Set<Size> sizes;
 }
