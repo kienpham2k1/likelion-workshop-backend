@@ -1,6 +1,6 @@
 server:
   port:
-    5000
+    8080
 logging:
   level:
     org:
