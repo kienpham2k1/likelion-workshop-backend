@@ -8,8 +8,8 @@ logging:
 spring:
   datasource:
     url: jdbc:postgresql://likelion-eshop.c3k4q404y59t.ap-south-1.rds.amazonaws.com:5432/likelion_eshop
-    username: postgres
-    password: 12345678
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -19,11 +19,3 @@ spring:
         format_sql: true
         use_nationalized_character_data: true
     show-sql: true
-myapplication:
-  name: PROD- updated Spring boot example
-my:
-  message: DEV-Welcome to my ${myapplication.name} application
-  usercount: 300
-  contactinfo: DEV-updateduser@cravejava.in
-  env: DEV
-  thankyoumessage: Thank you for visiting
