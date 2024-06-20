@@ -12,7 +12,7 @@ spring:
     password: 12345
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -20,4 +20,4 @@ spring:
         use_nationalized_character_data: true
     show-sql: true
   profiles:
-    active: prod
+    active: dev
