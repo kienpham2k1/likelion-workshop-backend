@@ -28,7 +28,6 @@ public class Voucher {
     private LocalDate expired_date;
     @Column(nullable = false)
     private LocalDate create_date;
-    @OneToOne(mappedBy = "voucher")
-    @PrimaryKeyJoinColumn
-    private Order order;
+    @ManyToMany(mappedBy = "vouchers")
+    private Set<Order> orders;
 }

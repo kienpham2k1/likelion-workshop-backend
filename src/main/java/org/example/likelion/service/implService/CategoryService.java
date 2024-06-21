@@ -1,6 +1,7 @@
 package org.example.likelion.service.implService;
 
 import lombok.RequiredArgsConstructor;
+import org.example.likelion.constant.ErrorMessage;
 import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.Category;
 import org.example.likelion.repository.CategoryRepository;
@@ -28,7 +29,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category get(String id) {
-        return categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(""));
+        return categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
     }
 
     @Override

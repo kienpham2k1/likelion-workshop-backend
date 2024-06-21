@@ -19,4 +19,5 @@ public interface IProductService {
     void update(String id, Product product);
 
     void delete(String id);
+    boolean isStocking(String id, int quantity);
 }

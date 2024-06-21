@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "order_detail")
 @Getter
@@ -17,9 +19,12 @@ public class OrderDetail {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "order_detail_id")
     private String id;
-    @OneToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "product_id")
+    @Column(name = "product_id")
+    private String product_id;
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id", insertable = false, updatable = false)
     private Product product;
+    private int quantity;
     @Column(name = "order_id")
     private String orderId;
     @ManyToOne

@@ -18,6 +18,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             ResourceNotFoundException.class,
             EntityNotFoundException.class,
+            OutOfStockProductException.class
     })
     public <T extends RuntimeException> ResponseEntity<ApiError> resourceNotFoundExceptionHandler(T ex, WebRequest request) {
         ApiError message = ApiError.builder()
