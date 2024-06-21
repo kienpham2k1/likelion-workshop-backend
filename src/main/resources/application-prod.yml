@@ -8,8 +8,8 @@ logging:
 spring:
   datasource:
     url: jdbc:postgresql://likelion-eshop.c3k4q404y59t.ap-south-1.rds.amazonaws.com:5432/likelion_eshop
-    username: postgres
-    password: 12345678
+    username:
+    password:
   jpa:
     hibernate:
       ddl-auto: update
