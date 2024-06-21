@@ -1,6 +1,7 @@
 package org.example.likelion.service.implService;
 
 import lombok.AllArgsConstructor;
+import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.Product;
 import org.example.likelion.repository.ProductRepository;
 import org.example.likelion.service.IProductService;
@@ -27,7 +28,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product get(String id) {
-        return productRepository.findById(id).orElseThrow();
+        return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(""));
     }
 
     @Override
