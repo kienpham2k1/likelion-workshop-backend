@@ -22,7 +22,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Page<Category> gets(String name, Pageable pageable) {
-        return categoryRepository.findByNameEqualsIgnoreCase(name, pageable);
+        return categoryRepository.findByNameIsContainingIgnoreCase(name, pageable);
     }
 
     @Override
