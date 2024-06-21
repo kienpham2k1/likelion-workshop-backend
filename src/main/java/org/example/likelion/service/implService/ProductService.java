@@ -1,6 +1,7 @@
 package org.example.likelion.service.implService;
 
 import lombok.AllArgsConstructor;
+import org.example.likelion.constant.ErrorMessage;
 import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.Product;
 import org.example.likelion.repository.ProductRepository;
@@ -46,5 +47,11 @@ public class ProductService implements IProductService {
     public void delete(String id) {
         productRepository.findById(id).orElseThrow();
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean isStocking(String id, int quantity) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PRODUCT_NOT_FOUND));
+        return product.getQuantity() > quantity;
     }
 }

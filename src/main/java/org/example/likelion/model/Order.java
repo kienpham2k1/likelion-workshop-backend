@@ -32,10 +32,11 @@ public class Order {
     private LocalDate createDate;
     @OneToMany(mappedBy = "order")
     private Set<OrderDetail> orderDetails;
-    @OneToOne
-//    @JoinColumn(name = "order_id", referencedColumnName = "voucher_id")
-    @MapsId
-    @JoinColumn(name = "order_id")
-    private Voucher voucher;
+    @ManyToMany
+    @JoinTable(
+            name = "ord_voucher",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "voucher_id"))
+    private Set<Voucher> vouchers;
 
 }

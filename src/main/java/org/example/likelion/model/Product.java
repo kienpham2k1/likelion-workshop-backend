@@ -21,7 +21,6 @@ public class Product {
     private String id;
     @Column(nullable = false)
     private String name;
-//        @Column(nullable = false)
     private String description;
     private String color;
     private int size;
@@ -33,6 +32,6 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false, insertable = false, updatable = false)
     private Category category;
-    @OneToOne(mappedBy = "product")
-    private OrderDetail orderDetail;
+    @OneToMany(mappedBy = "product")
+    private Set<OrderDetail> orderDetails;
 }
