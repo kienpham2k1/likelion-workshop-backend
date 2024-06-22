@@ -1,5 +1,6 @@
 package org.example.likelion.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.mapper.IProductMapper;
 import org.example.likelion.dto.mapper.IProductMapper;
@@ -51,13 +52,13 @@ public class ProductController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody ProductRequest request) {
+    public void create(@RequestBody @Valid ProductRequest request) {
         productService.create(IProductMapper.INSTANCE.toEntity(request));
     }
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable String id, @RequestBody ProductRequest request) {
+    public void update(@PathVariable String id, @RequestBody @Valid ProductRequest request) {
         productService.update(id, IProductMapper.INSTANCE.toEntity(request));
     }
 

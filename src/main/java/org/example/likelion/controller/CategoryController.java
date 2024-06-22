@@ -1,5 +1,6 @@
 package org.example.likelion.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.mapper.ICategoryMapper;
 import org.example.likelion.dto.request.CategoryRequest;
@@ -45,13 +46,13 @@ public class CategoryController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody CategoryRequest request) {
+    public void create(@RequestBody @Valid CategoryRequest request) {
         categoryService.create(ICategoryMapper.INSTANCE.toEntity(request));
     }
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable String id, @RequestBody CategoryRequest request) {
+    public void update(@PathVariable String id, @RequestBody @Valid CategoryRequest request) {
         categoryService.update(id, ICategoryMapper.INSTANCE.toEntity(request));
     }
 

@@ -1,5 +1,6 @@
 package org.example.likelion.service;
 
+import org.example.likelion.enums.OrderStatus;
 import org.example.likelion.model.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,5 +18,7 @@ public interface IOrderService {
 
     Order update(String id, Order order);
 
-    void delete(String id);
+    Order updateStatus(String id, OrderStatus status);
+
+    void cancel(String id);
 }

@@ -2,22 +2,29 @@ package org.example.likelion.service.implService;
 
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
+import org.example.likelion.enums.OrderStatus;
 import org.example.likelion.exception.EntityNotFoundException;
+import org.example.likelion.exception.OutOfStockProductException;
 import org.example.likelion.model.Order;
 import org.example.likelion.repository.OrderRepository;
+import org.example.likelion.service.IOrderDetailService;
 import org.example.likelion.service.IOrderService;
+import org.example.likelion.service.IProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
+    private final IProductService productService;
+    private final IOrderDetailService orderDetailService;
 
     @Override
     public List<Order> gets() {
@@ -36,7 +43,18 @@ public class OrderService implements IOrderService {
 
     @Override
     public Order create(Order order) {
-        return orderRepository.save(order);
+        order.setCreateDate(LocalDate.now());
+        order.getOrderDetails().forEach(e -> {
+            if (!productService.isStocking(e.getProductId(), e.getQuantity()))
+                throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_PRODUCT);
+        });
+        Order o = orderRepository.save(order);
+        order.getOrderDetails().forEach(e -> {
+            e.setOrderId(o.getId());
+            productService.reduce(e.getProductId(), e.getQuantity());
+            orderDetailService.create(e);
+        });
+        return o;
     }
 
     @Override
@@ -46,8 +64,16 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void delete(String id) {
-        orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
-        orderRepository.deleteById(id);
+    public Order updateStatus(String id, OrderStatus status) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
+        order.setOrderStatus(status);
+        return orderRepository.save(order);
+    }
+
+    @Override
+    public void cancel(String id) {
+        Order cur = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
+        cur.setCancel(true);
+        orderRepository.save(cur);
     }
 }

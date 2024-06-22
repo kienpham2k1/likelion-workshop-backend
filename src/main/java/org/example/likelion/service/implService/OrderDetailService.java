@@ -43,16 +43,4 @@ public class OrderDetailService implements IOrderDetailService {
     public OrderDetail create(OrderDetail orderDetail) {
       return   orderDetailRepository.save(orderDetail);
     }
-
-    @Override
-    public OrderDetail update(String id, OrderDetail orderDetail) {
-        orderDetailRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_DETAIL_NOT_FOUND));
-      return   orderDetailRepository.save(orderDetail);
-    }
-
-    @Override
-    public void delete(String id) {
-        orderDetailRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_DETAIL_NOT_FOUND));
-        orderDetailRepository.deleteById(id);
-    }
 }

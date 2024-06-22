@@ -1,5 +1,6 @@
 package org.example.likelion.controller;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
@@ -7,6 +8,7 @@ import org.example.likelion.dto.mapper.IOrderDetailMapper;
 import org.example.likelion.dto.mapper.IOrderMapper;
 import org.example.likelion.dto.request.OrderRequest;
 import org.example.likelion.dto.response.OrderResponse;
+import org.example.likelion.enums.OrderStatus;
 import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.exception.OutOfStockProductException;
 import org.example.likelion.model.Order;
@@ -55,17 +57,7 @@ public class OrderController {
 
     @PostMapping("/create")
     public void create(@RequestBody @Valid OrderRequest request) {
-        request.getOrderDetails().forEach(e -> {
-            if (!productService.isStocking(e.getProductId(), e.getQuantity()))
-                throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_PRODUCT);
-        });
-        Order order = orderService.create(IOrderMapper.INSTANCE.toEntity(request));
-        request.getOrderDetails().forEach(e -> {
-            OrderDetail orderDetail = IOrderDetailMapper.INSTANCE.toEntity(e);
-            orderDetail.setOrderId(order.getId());
-            productService.reduce(e.getProductId(), e.getQuantity());
-            orderDetailService.create(orderDetail);
-        });
+        orderService.create(IOrderMapper.INSTANCE.toEntity(request));
     }
 
     @PutMapping("/update/{id}")
@@ -74,9 +66,15 @@ public class OrderController {
         orderService.update(id, IOrderMapper.INSTANCE.toEntity(request));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/update-status/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateStatus(@PathVariable String id, @RequestBody @Valid OrderStatus status) {
+        orderService.updateStatus(id, status);
+    }
+
+    @DeleteMapping("/cancel/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void create(@PathVariable String id) {
-        orderService.delete(id);
+        orderService.cancel(id);
     }
 }

@@ -5,6 +5,7 @@ import org.example.likelion.dto.response.ProductResponse;
 import org.example.likelion.model.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -14,4 +15,7 @@ public interface IProductMapper {
     ProductResponse toDtoResponse(Product entity);
 
     Product toEntity(ProductRequest request);
+
+    @Mapping(target = "id", ignore = true)
+    void updateEntityFromEntity(Product from, @MappingTarget Product to);
 }
