@@ -44,14 +44,14 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody OrderRequest request) {
-        orderService.create(IOrderMapper.INSTANCE.toEntity(request));
+
+    public void create(@RequestBody @Valid OrderRequest request) {
+//        orderService.create(IOrderMapper.INSTANCE.toEntity(request));
     }
 
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable String id, @Valid @RequestBody OrderRequest request) {
+    public void update(@PathVariable String id, @RequestBody @Valid OrderRequest request) {
         orderService.update(id, IOrderMapper.INSTANCE.toEntity(request));
     }
 
