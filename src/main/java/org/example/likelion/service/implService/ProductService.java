@@ -29,7 +29,7 @@ public class ProductService implements IProductService {
 
     @Override
     public Product get(String id) {
-        return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(""));
+        return productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PRODUCT_NOT_FOUND));
     }
 
     @Override
@@ -39,13 +39,13 @@ public class ProductService implements IProductService {
 
     @Override
     public void update(String id, Product product) {
-        productRepository.findById(id).orElseThrow();
+        productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PRODUCT_NOT_FOUND));
         productRepository.save(product);
     }
 
     @Override
     public void delete(String id) {
-        productRepository.findById(id).orElseThrow();
+        productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PRODUCT_NOT_FOUND));
         productRepository.deleteById(id);
     }
 
