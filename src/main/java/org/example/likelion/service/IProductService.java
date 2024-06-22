@@ -14,10 +14,14 @@ public interface IProductService {
 
     Product get(String id);
 
-    void create(Product product);
+    Product create(Product product);
 
-    void update(String id, Product product);
+    Product update(String id, Product product);
+
+    Product reduce(String id, int quantity);
 
     void delete(String id);
+
     boolean isStocking(String id, int quantity);
+
 }

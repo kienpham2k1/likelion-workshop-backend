@@ -31,7 +31,7 @@ public class OrderDetailService implements IOrderDetailService {
 
     @Override
     public Page<OrderDetail> gets(String orderId, Pageable pageable) {
-        return  orderDetailRepository.findAllByOrderId(orderId, pageable);
+        return orderDetailRepository.findAllByOrderId(orderId, pageable);
     }
 
     @Override
@@ -40,16 +40,14 @@ public class OrderDetailService implements IOrderDetailService {
     }
 
     @Override
-    public void create(OrderDetail orderDetail) {
-        if (productService.isStocking(orderDetail.getProduct().getId(), orderDetail.getQuantity()))
-            orderDetailRepository.save(orderDetail);
-        else throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_PRODUCT);
+    public OrderDetail create(OrderDetail orderDetail) {
+      return   orderDetailRepository.save(orderDetail);
     }
 
     @Override
-    public void update(String id, OrderDetail orderDetail) {
+    public OrderDetail update(String id, OrderDetail orderDetail) {
         orderDetailRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_DETAIL_NOT_FOUND));
-        orderDetailRepository.save(orderDetail);
+      return   orderDetailRepository.save(orderDetail);
     }
 
     @Override

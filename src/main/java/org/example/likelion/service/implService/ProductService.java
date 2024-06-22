@@ -3,6 +3,7 @@ package org.example.likelion.service.implService;
 import lombok.AllArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
 import org.example.likelion.exception.EntityNotFoundException;
+import org.example.likelion.exception.OutOfStockProductException;
 import org.example.likelion.model.Product;
 import org.example.likelion.repository.ProductRepository;
 import org.example.likelion.service.IProductService;
@@ -33,14 +34,21 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public void create(Product product) {
-        productRepository.save(product);
+    public Product create(Product product) {
+        return productRepository.save(product);
     }
 
     @Override
-    public void update(String id, Product product) {
+    public Product update(String id, Product product) {
         productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PRODUCT_NOT_FOUND));
-        productRepository.save(product);
+        return productRepository.save(product);
+    }
+
+    @Override
+    public Product reduce(String id, int quantity) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PRODUCT_NOT_FOUND));
+        product.setQuantity(product.getQuantity() - quantity);
+        return productRepository.save(product);
     }
 
     @Override
@@ -51,7 +59,7 @@ public class ProductService implements IProductService {
 
     @Override
     public boolean isStocking(String id, int quantity) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PRODUCT_NOT_FOUND));
-        return product.getQuantity() > quantity;
+        Product product = productRepository.findById(id).orElseThrow(() -> new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_PRODUCT));
+        return product.getQuantity() >= quantity;
     }
 }

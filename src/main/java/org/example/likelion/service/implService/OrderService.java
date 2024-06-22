@@ -35,14 +35,14 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public void create(Order order) {
-        orderRepository.save(order);
+    public Order create(Order order) {
+        return orderRepository.save(order);
     }
 
     @Override
-    public void update(String id, Order order) {
+    public Order update(String id, Order order) {
         orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
-        orderRepository.save(order);
+        return orderRepository.save(order);
     }
 
     @Override
