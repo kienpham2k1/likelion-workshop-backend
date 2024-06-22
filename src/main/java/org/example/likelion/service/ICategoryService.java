@@ -14,9 +14,9 @@ public interface ICategoryService {
 
     Category get(String id);
 
-    void create(Category category);
+    Category create(Category category);
 
-    void update(String id, Category category);
+    Category update(String id, Category category);
 
     void delete(String id);
 }

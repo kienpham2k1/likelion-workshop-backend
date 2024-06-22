@@ -33,14 +33,14 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
-    public void create(Category category) {
-        categoryRepository.save(category);
+    public Category create(Category category) {
+        return categoryRepository.save(category);
     }
 
     @Override
-    public void update(String id, Category category) {
+    public Category update(String id, Category category) {
         categoryRepository.findById(id).orElseThrow();
-        categoryRepository.save(category);
+       return categoryRepository.save(category);
     }
 
     @Override

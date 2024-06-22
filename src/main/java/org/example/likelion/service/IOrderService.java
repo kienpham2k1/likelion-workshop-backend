@@ -13,9 +13,9 @@ public interface IOrderService {
 
     Order get(String id);
 
-    void create(Order order);
+    Order create(Order order);
 
-    void update(String id, Order order);
+    Order update(String id, Order order);
 
     void delete(String id);
 }
