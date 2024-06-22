@@ -2,6 +2,7 @@ package org.example.likelion.service.implService;
 
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
+import org.example.likelion.dto.mapper.ICategoryMapper;
 import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.Category;
 import org.example.likelion.repository.CategoryRepository;
@@ -39,13 +40,14 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public Category update(String id, Category category) {
-        categoryRepository.findById(id).orElseThrow();
-       return categoryRepository.save(category);
+        Category cur = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
+        ICategoryMapper.INSTANCE.updateEntityFromEntity(category, cur);
+        return categoryRepository.save(cur);
     }
 
     @Override
     public void delete(String id) {
-        categoryRepository.findById(id).orElseThrow();
+        Category cur = categoryRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
         categoryRepository.deleteById(id);
     }
 }

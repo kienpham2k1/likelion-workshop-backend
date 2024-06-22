@@ -43,22 +43,4 @@ public class OrderDetailController {
     public OrderDetailResponse getCategory(@PathVariable String id) {
         return IOrderDetailMapper.INSTANCE.toDtoResponse(orderDetailService.get(id));
     }
-
-//    @PostMapping("/create")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public void create(@RequestBody OrderDetailRequest request) {
-//        orderDetailService.create(IOrderDetailMapper.INSTANCE.toEntity(request));
-//    }
-//
-//    @PutMapping("/update/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void update(@PathVariable String id, @RequestBody OrderDetailRequest request) {
-//        orderDetailService.update(id, IOrderDetailMapper.INSTANCE.toEntity(request));
-//    }
-//
-//    @DeleteMapping("/delete/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void create(@PathVariable String id) {
-//        orderDetailService.delete(id);
-//    }
 }

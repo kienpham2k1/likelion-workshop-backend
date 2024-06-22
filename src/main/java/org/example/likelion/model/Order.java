@@ -1,10 +1,10 @@
 package org.example.likelion.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
+import lombok.*;
+import org.example.likelion.enums.OrderStatus;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -15,12 +15,15 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "order_id")
     private String id;
     @Column(nullable = false)
+    @Positive
+    @Min(1)
     private double total;
     @Column(name = "shipping_fee", nullable = false)
     private double shippingFee;
@@ -30,6 +33,10 @@ public class Order {
     private String addressLine;
     @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
+    @Column(name = "order_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus = OrderStatus.RECEIVED;
+    private boolean isCancel;
     @OneToMany(mappedBy = "order")
     private Set<OrderDetail> orderDetails;
     @ManyToMany

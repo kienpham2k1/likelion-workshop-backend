@@ -14,8 +14,4 @@ public interface IOrderDetailService {
     OrderDetail get(String id);
 
     OrderDetail create(OrderDetail orderDetail);
-
-    OrderDetail update(String id, OrderDetail orderDetail);
-
-    void delete(String id);
 }

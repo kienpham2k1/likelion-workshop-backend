@@ -1,14 +1,32 @@
 package org.example.likelion.dto.request;
 
-import lombok.Data;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ProductRequest {
+    @NotNull
+    @NotEmpty
     private String name;
     private String description;
+    @NotNull
+    @NotEmpty
     private String color;
+    @Positive
     private int size;
+    @Min(1)
+    @NotNull
     private int quantity;
+    @Min(1)
+    @NotNull
     private double price;
+    @NotNull
     private String categoryId;
 }

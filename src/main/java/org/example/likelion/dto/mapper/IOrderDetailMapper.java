@@ -7,6 +7,8 @@ import org.example.likelion.dto.response.ProductResponse;
 import org.example.likelion.model.OrderDetail;
 import org.example.likelion.model.Product;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
