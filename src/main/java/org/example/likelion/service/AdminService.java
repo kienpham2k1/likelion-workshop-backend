@@ -1,4 +1,5 @@
 package org.example.likelion.service;
 
-public interface IRoleService {
+public interface AdminService {
+
 }

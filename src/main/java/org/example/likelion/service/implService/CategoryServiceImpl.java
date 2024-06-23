@@ -6,7 +6,7 @@ import org.example.likelion.dto.mapper.ICategoryMapper;
 import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.Category;
 import org.example.likelion.repository.CategoryRepository;
-import org.example.likelion.service.ICategoryService;
+import org.example.likelion.service.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryService implements ICategoryService {
+public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override

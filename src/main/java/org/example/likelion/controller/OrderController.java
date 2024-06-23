@@ -1,21 +1,14 @@
 package org.example.likelion.controller;
 
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.likelion.constant.ErrorMessage;
-import org.example.likelion.dto.mapper.IOrderDetailMapper;
 import org.example.likelion.dto.mapper.IOrderMapper;
 import org.example.likelion.dto.request.OrderRequest;
 import org.example.likelion.dto.response.OrderResponse;
 import org.example.likelion.enums.OrderStatus;
-import org.example.likelion.exception.EntityNotFoundException;
-import org.example.likelion.exception.OutOfStockProductException;
-import org.example.likelion.model.Order;
-import org.example.likelion.model.OrderDetail;
-import org.example.likelion.service.IOrderDetailService;
-import org.example.likelion.service.IOrderService;
-import org.example.likelion.service.IProductService;
+import org.example.likelion.service.OrderDetailService;
+import org.example.likelion.service.OrderService;
+import org.example.likelion.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,9 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/order")
 public class OrderController {
-    private final IOrderService orderService;
-    private final IOrderDetailService orderDetailService;
-    private final IProductService productService;
+    private final OrderService orderService;
+    private final OrderDetailService orderDetailService;
+    private final ProductService productService;
 
     @GetMapping("/getList")
     @ResponseStatus(HttpStatus.OK)

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.mapper.ICategoryMapper;
 import org.example.likelion.dto.request.CategoryRequest;
 import org.example.likelion.dto.response.CategoryResponse;
-import org.example.likelion.service.ICategoryService;
+import org.example.likelion.service.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/category")
 public class CategoryController {
-    private final ICategoryService categoryService;
+    private final CategoryService categoryService;
 
     @GetMapping("/getList")
     @ResponseStatus(HttpStatus.OK)

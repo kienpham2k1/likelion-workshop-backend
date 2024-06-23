@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public interface IOrderDetailService {
+public interface OrderDetailService {
     List<OrderDetail> gets(String orderId);
 
     Page<OrderDetail> gets(String orderId, Pageable pageable);

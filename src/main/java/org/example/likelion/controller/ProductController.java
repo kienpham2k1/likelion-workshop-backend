@@ -3,15 +3,9 @@ package org.example.likelion.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.mapper.IProductMapper;
-import org.example.likelion.dto.mapper.IProductMapper;
-import org.example.likelion.dto.request.CategoryRequest;
 import org.example.likelion.dto.request.ProductRequest;
-import org.example.likelion.dto.response.CategoryResponse;
 import org.example.likelion.dto.response.ProductResponse;
-import org.example.likelion.model.Product;
-import org.example.likelion.service.ICategoryService;
-import org.example.likelion.service.IProductService;
-import org.example.likelion.service.implService.ProductService;
+import org.example.likelion.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/product")
 public class ProductController {
-    private final IProductService productService;
+    private final ProductService productService;
 
     @GetMapping("/getList")
     @ResponseStatus(HttpStatus.OK)

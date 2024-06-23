@@ -1,8 +1,12 @@
-package org.example.likelion.exception;
+package org.example.likelion.config;
 
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.example.likelion.constant.ErrorMessage;
+import org.example.likelion.exception.DuplicateRecordException;
+import org.example.likelion.exception.EntityNotFoundException;
+import org.example.likelion.exception.OutOfStockProductException;
+import org.example.likelion.exception.ResourceNotFoundException;
 import org.example.likelion.exception.errorModel.ErrorResponseEntity;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -82,7 +86,7 @@ public class GlobalExceptionHandler {
                 .description(request.getDescription(false))
                 .timestamp(LocalDateTime.now()).build();
         log.error("Exception: %s".formatted(errorResponse));
-        log.error(ex.getMessage(), ex);
+        log.error(ex.getMessage(), ex.getMessage());
         return errorResponse;
     }
 

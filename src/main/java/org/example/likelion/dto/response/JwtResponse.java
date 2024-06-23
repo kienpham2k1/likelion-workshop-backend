@@ -6,14 +6,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class JwtResponse {
-    @JsonProperty(    "access_token" )
+    @JsonProperty("access_token")
     private String accessToken;
-    @JsonProperty(  "access_token" )
+    @JsonProperty("access_token")
     private String refreshToken;
 }
