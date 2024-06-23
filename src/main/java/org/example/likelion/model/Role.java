@@ -17,9 +17,9 @@ import java.util.Set;
 @Builder
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
-    private String id;
+    private int id;
     @NotNull
     @NotBlank
     private String name;

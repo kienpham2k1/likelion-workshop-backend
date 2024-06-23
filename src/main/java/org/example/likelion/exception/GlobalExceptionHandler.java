@@ -1,9 +1,12 @@
 package org.example.likelion.exception;
 
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.example.likelion.constant.ErrorMessage;
 import org.example.likelion.exception.errorModel.ErrorResponseEntity;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -94,5 +98,44 @@ public class GlobalExceptionHandler {
                 .build();
         log.warn("Duplicate record exception: %s".formatted(errorResponse));
         return errorResponse;
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponseEntity auth(DuplicateRecordException ex, WebRequest request) {
+        ErrorResponseEntity errorResponse = ErrorResponseEntity.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(ex.getMessage())
+                .description(request.getDescription(false))
+                .timestamp(LocalDateTime.now())
+                .build();
+        log.warn("Bad credentials: %s".formatted(errorResponse));
+        return errorResponse;
+    }
+
+    @ExceptionHandler({JwtException.class})
+    public <T extends RuntimeException> ErrorResponseEntity jwtExceptionHandler(T ex, WebRequest request) {
+        ErrorResponseEntity err = ErrorResponseEntity.builder()
+                .status(HttpStatus.UNAUTHORIZED)
+                .message(ErrorMessage.JWT_TOKEN_INVALID)
+                .description(request.getDescription(false))
+                .timestamp(LocalDateTime.now())
+                .build();
+        log.warn("JWT exception: %s".formatted(err));
+        return err;
+    }
+
+
+    //403
+    @ExceptionHandler({AccessDeniedException.class})
+    public <T extends RuntimeException> ErrorResponseEntity accessDeniedExceptionHandler(T ex, WebRequest request) {
+        ErrorResponseEntity err = ErrorResponseEntity.builder()
+                .status(HttpStatus.FORBIDDEN)
+                .message(ex.getMessage())
+                .description(request.getDescription(false))
+                .timestamp(LocalDateTime.now())
+                .build();
+        log.warn("Access denied exception: %s".formatted(err));
+        return err;
     }
 }

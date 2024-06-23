@@ -24,7 +24,7 @@ public class Admin {
     @NotBlank
     private String password;
     @Column(name = "role_id", nullable = false)
-    private String roleId;
+    private int roleId;
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "role_id", insertable = false, updatable = false)
     private Role role;

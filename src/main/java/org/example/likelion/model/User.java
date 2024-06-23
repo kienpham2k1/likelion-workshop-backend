@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "[user]")
 @Getter
@@ -31,8 +33,12 @@ public class User {
     @NotBlank
     private String addressLine;
     @Column(name = "role_id", nullable = false)
-    private String roleId;
+    private int roleId;
     @ManyToOne
     @JoinColumn(name = "role_id", referencedColumnName = "role_id", insertable = false, updatable = false)
     private Role role;
+    @OneToMany(mappedBy = "user")
+    private Set<Order> orders;
+    @OneToMany(mappedBy = "user")
+    private Set<Token> tokens;
 }
