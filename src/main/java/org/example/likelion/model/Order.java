@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "[order]")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -45,5 +45,9 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "voucher_id"))
     private Set<Voucher> vouchers;
-
+    @Column(name = "user_id", nullable = false)
+    private String userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
+    private User user;
 }

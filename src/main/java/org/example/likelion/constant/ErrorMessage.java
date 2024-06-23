@@ -6,4 +6,5 @@ public class ErrorMessage {
     public static final String ORDER_NOT_FOUND = "Order not found!";
     public static final String ORDER_DETAIL_NOT_FOUND = "Order detail not found!";
     public static final String OUT_OF_STOCK_PRODUCT = "Out of stock product!";
+    public static final String JWT_TOKEN_INVALID = "JWT token is expired or invalid!";
 }
