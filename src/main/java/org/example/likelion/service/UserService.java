@@ -1,5 +1,4 @@
 package org.example.likelion.service;
 
-public interface IAdminService {
-
+public interface UserService {
 }

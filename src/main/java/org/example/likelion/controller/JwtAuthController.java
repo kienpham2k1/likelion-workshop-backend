@@ -1,14 +1,19 @@
 package org.example.likelion.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.example.likelion.dto.mapper.IUserMapper;
 import org.example.likelion.dto.request.LoginRequest;
 import org.example.likelion.dto.request.UserRegisterRequest;
+import org.example.likelion.dto.response.JwtResponse;
+import org.example.likelion.dto.response.UserRegisterResponse;
+import org.example.likelion.service.auth.AuthenticationService;
 import org.example.likelion.service.jwt.JwtService;
 import org.example.likelion.model.User;
 import org.example.likelion.repository.UserRepository;
 import org.example.likelion.dto.auth.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,10 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 
@@ -27,49 +29,18 @@ import java.io.UnsupportedEncodingException;
 public class JwtAuthController {
 
     @Autowired
-    AuthenticationManager authenticationManager;
-
-    @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
-    JwtService jwtUtils;
-
-    @Autowired
-    UserRepository userRepository;
+    private AuthenticationService authenticationService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody UserRegisterRequest signUpRequest, HttpServletRequest request) throws UnsupportedEncodingException {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest()
-                    .body("Error: Username is already taken!");
-        }
-        User user = IUserMapper.INSTANCE.toEntity(signUpRequest);
-        user.setPassword(encoder.encode(signUpRequest.getPassword()));
-
-        userRepository.save(user);
-
-        return ResponseEntity.ok(signUpRequest);
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserRegisterResponse registerUser(@RequestBody @Valid UserRegisterRequest signUpRequest) {
+        return authenticationService.register(signUpRequest);
     }
 
     @PostMapping("/signin")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-        SecurityContextHolder.getContext()
-                .setAuthentication(authentication);
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-        String jwt = jwtUtils.generateToken(userDetails);
-
-        return ResponseEntity.ok(jwt);
+        JwtResponse jwt = authenticationService.authenticate(loginRequest);
+        return new ResponseEntity<>(jwt, HttpStatus.OK);
     }
-
-    @RequestMapping("/user-dashboard")
-    @PreAuthorize("isAuthenticated()")
-    public String dashboard() {
-        return "My Dashboard";
-    }
-
 }

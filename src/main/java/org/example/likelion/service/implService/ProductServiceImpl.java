@@ -4,10 +4,9 @@ import lombok.AllArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
 import org.example.likelion.dto.mapper.IProductMapperImpl;
 import org.example.likelion.exception.EntityNotFoundException;
-import org.example.likelion.exception.OutOfStockProductException;
 import org.example.likelion.model.Product;
 import org.example.likelion.repository.ProductRepository;
-import org.example.likelion.service.IProductService;
+import org.example.likelion.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ProductService implements IProductService {
+public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override

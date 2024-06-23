@@ -7,13 +7,11 @@ import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.exception.OutOfStockProductException;
 import org.example.likelion.model.Order;
 import org.example.likelion.repository.OrderRepository;
-import org.example.likelion.service.IOrderDetailService;
-import org.example.likelion.service.IOrderService;
-import org.example.likelion.service.IProductService;
+import org.example.likelion.service.OrderDetailService;
+import org.example.likelion.service.OrderService;
+import org.example.likelion.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,10 +19,10 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OrderService implements IOrderService {
+public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-    private final IProductService productService;
-    private final IOrderDetailService orderDetailService;
+    private final ProductService productService;
+    private final OrderDetailService orderDetailService;
 
     @Override
     public List<Order> gets() {

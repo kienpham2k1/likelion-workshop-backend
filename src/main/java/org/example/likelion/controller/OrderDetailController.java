@@ -2,9 +2,8 @@ package org.example.likelion.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.mapper.IOrderDetailMapper;
-import org.example.likelion.dto.request.OrderDetailRequest;
 import org.example.likelion.dto.response.OrderDetailResponse;
-import org.example.likelion.service.IOrderDetailService;
+import org.example.likelion.service.OrderDetailService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/order-detail")
 public class OrderDetailController {
-    private final IOrderDetailService orderDetailService;
+    private final OrderDetailService orderDetailService;
 
     @GetMapping("/getList")
     @ResponseStatus(HttpStatus.OK)

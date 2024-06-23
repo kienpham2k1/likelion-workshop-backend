@@ -3,26 +3,21 @@ package org.example.likelion.service.implService;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
 import org.example.likelion.exception.EntityNotFoundException;
-import org.example.likelion.exception.OutOfStockProductException;
-import org.example.likelion.model.Category;
 import org.example.likelion.model.OrderDetail;
 import org.example.likelion.repository.OrderDetailRepository;
-import org.example.likelion.repository.ProductRepository;
-import org.example.likelion.service.IOrderDetailService;
-import org.example.likelion.service.IProductService;
+import org.example.likelion.service.OrderDetailService;
+import org.example.likelion.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class OrderDetailService implements IOrderDetailService {
+public class OrderDetailServiceImpl implements OrderDetailService {
     private final OrderDetailRepository orderDetailRepository;
-    private final IProductService productService;
+    private final ProductService productService;
 
     @Override
     public List<OrderDetail> gets(String orderId) {

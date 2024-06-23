@@ -1,4 +1,4 @@
 package org.example.likelion.service;
 
-public interface IPromotionService  {
+public interface RoleService {
 }
