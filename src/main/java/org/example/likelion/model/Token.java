@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.likelion.enums.TokenType;
 
 @Data
 @Builder
@@ -27,8 +28,8 @@ public class Token {
     @Column(unique = true)
     public String token;
 
-//    @Enumerated(EnumType.STRING)
-//    public TokenType tokenType = TokenType.BEARER;
+    @Enumerated(EnumType.STRING)
+    public TokenType tokenType = TokenType.BEARER;
 
     public boolean revoked;
 

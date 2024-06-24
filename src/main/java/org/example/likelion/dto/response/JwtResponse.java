@@ -11,8 +11,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class JwtResponse {
-    @JsonProperty("access_token")
+//    @JsonProperty("access_token")
     private String accessToken;
-    @JsonProperty("access_token")
+//    @JsonProperty("access_token")
     private String refreshToken;
 }

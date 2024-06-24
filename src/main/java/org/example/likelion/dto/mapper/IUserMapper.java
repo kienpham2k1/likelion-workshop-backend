@@ -1,5 +1,6 @@
 package org.example.likelion.dto.mapper;
 
+import org.example.likelion.dto.auth.UserDetailsImpl;
 import org.example.likelion.dto.request.UserRegisterRequest;
 import org.example.likelion.dto.response.UserRegisterResponse;
 import org.example.likelion.dto.response.UserResponse;
@@ -16,4 +17,6 @@ public interface IUserMapper {
     UserRegisterResponse toDtoRegisterResponse(User entity);
 
     User toEntity(UserRegisterRequest request);
+
+    User toEntity(UserDetailsImpl userDetails);
 }
