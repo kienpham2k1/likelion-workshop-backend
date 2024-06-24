@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
@@ -19,4 +20,8 @@ public interface ProductRepository extends JpaRepository<Product, String> {
             "where :name is null or upper(CAST(p.name as string)) like upper(CAST(concat('%', :name, '%')as string)) " +
             "group by p.name, p.description, p.price")
     Page<Product> findByNameContainsIgnoreCase(@Param("name") String name, Pageable pageable);
+    @Query("select p.imgLink from Product p where p.name = :productName order by p.id limit 1")
+    String findImgLinkByProductName(@Param("productName") String productName);
+
+    List<Product> findAllByName(String productName);
 }
