@@ -1,6 +1,7 @@
 package org.example.likelion.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.example.likelion.dto.mapper.IUserMapper;
 import org.example.likelion.dto.request.LoginRequest;
@@ -23,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 @RestController
@@ -39,8 +41,14 @@ public class JwtAuthController {
 
     @PostMapping("/signin")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        JwtResponse jwt = authenticationService.authenticate(loginRequest);
-        return new ResponseEntity<>(jwt, HttpStatus.OK);
+    public JwtResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
+        return authenticationService.authenticate(loginRequest);
+    }
+
+    @PostMapping("/refresh-token")
+    @ResponseStatus(HttpStatus.OK)
+    public void refreshToken(HttpServletRequest request,
+                             HttpServletResponse response) throws IOException {
+        authenticationService.refreshToken(request, response);
     }
 }

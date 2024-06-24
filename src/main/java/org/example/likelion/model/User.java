@@ -1,9 +1,12 @@
 package org.example.likelion.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.example.likelion.dto.auth.UserDetailsImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Set;
 
@@ -14,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class User extends UserDetailsImpl {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "user_id")
@@ -25,6 +28,7 @@ public class User {
     private String username;
     @NotNull
     @NotBlank
+    @JsonIgnore
     private String password;
     @NotNull
     @NotBlank

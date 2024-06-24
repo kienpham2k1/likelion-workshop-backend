@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.example.likelion.dto.auth.UserDetailsImpl;
 
 @Entity
 @Table(name = "admin")
@@ -12,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Admin {
+public class Admin extends UserDetailsImpl {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "admin_id")
