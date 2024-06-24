@@ -1,9 +1,9 @@
 package org.example.likelion.dto.request;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.example.likelion.dto.auth.Role;
 
 @Data
 @Getter
@@ -24,6 +24,5 @@ public class UserRegisterRequest {
     @NotNull
     @NotBlank
     private String addressLine;
-    @Column(name = "role_id", nullable = false)
-    private int roleId;
+    private Role role = Role.USER;
 }
