@@ -40,4 +40,10 @@ public class Product {
     private Category category;
     @OneToMany(mappedBy = "product")
     private Set<OrderDetail> orderDetails;
+
+    public Product(String name, String description, double price, int quantity) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
 }

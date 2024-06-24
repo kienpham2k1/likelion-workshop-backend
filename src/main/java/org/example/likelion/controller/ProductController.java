@@ -33,7 +33,7 @@ public class ProductController {
                                              @RequestParam(defaultValue = "0") Integer pageNo,
                                              @RequestParam(defaultValue = "10") Integer pageSize,
                                              @RequestParam(defaultValue = "asc") String sortDirection,
-                                             @RequestParam(defaultValue = "id") String sortBy) {
+                                             @RequestParam(defaultValue = "name") String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
         return productService.gets(name, pageable).map(IProductMapper.INSTANCE::toDtoResponse);
     }
