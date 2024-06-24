@@ -4,7 +4,12 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.example.likelion.dto.auth.Role;
 import org.example.likelion.dto.auth.UserDetailsImpl;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Table(name = "admin")
@@ -24,9 +29,13 @@ public class Admin extends UserDetailsImpl {
     @NotNull
     @NotBlank
     private String password;
-    @Column(name = "role_id", nullable = false)
-    private int roleId;
-    @ManyToOne
-    @JoinColumn(name = "role_id", referencedColumnName = "role_id", insertable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull
     private Role role;
+    @OneToMany(mappedBy = "admin")
+    private Set<Token> tokens;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return role.getAuthorities();
+    }
 }

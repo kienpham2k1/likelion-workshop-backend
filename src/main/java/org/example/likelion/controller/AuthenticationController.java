@@ -3,35 +3,30 @@ package org.example.likelion.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import org.example.likelion.dto.mapper.IUserMapper;
 import org.example.likelion.dto.request.LoginRequest;
 import org.example.likelion.dto.request.UserRegisterRequest;
 import org.example.likelion.dto.response.JwtResponse;
 import org.example.likelion.dto.response.UserRegisterResponse;
-import org.example.likelion.service.auth.AuthenticationService;
-import org.example.likelion.service.jwt.JwtService;
 import org.example.likelion.model.User;
 import org.example.likelion.repository.UserRepository;
-import org.example.likelion.dto.auth.UserDetailsImpl;
+import org.example.likelion.service.auth.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import static org.example.likelion.dto.auth.Role.ADMIN;
 
 @RestController
-public class JwtAuthController {
+@RequestMapping("/api/v1/auth")
+public class AuthenticationController {
 
     @Autowired
     private AuthenticationService authenticationService;
+    @Autowired
+    UserRepository userRepository;
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
@@ -51,4 +46,18 @@ public class JwtAuthController {
                              HttpServletResponse response) throws IOException {
         authenticationService.refreshToken(request, response);
     }
+
+    @GetMapping("/get-user")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> getUser() {
+
+        return userRepository.findAll();
+    }
+
+    @GetMapping("/get-role")
+    @ResponseStatus(HttpStatus.OK)
+    public String getRole() {
+        return ADMIN.name();
+    }
+
 }

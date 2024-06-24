@@ -14,7 +14,6 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@Builder
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
@@ -24,26 +23,11 @@ public class UserDetailsImpl implements UserDetails {
 
     @JsonIgnore
     private String password;
-
-//    public static UserDetailsImpl buildFromUser(User user) {
-//        return UserDetailsImpl.builder()
-//                .id(user.getId())
-//                .username(user.getUsername())
-//                .password(user.getPassword())
-//                .build();
-//    }
-//
-//    public static UserDetailsImpl buildFromAdmin(Admin admin) {
-//        return UserDetailsImpl.builder()
-//                .id(admin.getId())
-//                .username(admin.getUsername())
-//                .password(admin.getPassword())
-//                .build();
-//    }
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return role.getAuthorities();
     }
 
     @Override

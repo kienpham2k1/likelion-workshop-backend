@@ -2,13 +2,21 @@ package org.example.likelion.service.implService;
 
 import lombok.AllArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
+import org.example.likelion.dto.auth.UserDetailsImpl;
 import org.example.likelion.dto.mapper.IProductMapperImpl;
 import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.Product;
 import org.example.likelion.repository.ProductRepository;
 import org.example.likelion.service.ProductService;
+import org.example.likelion.service.auth.AuthenticationService;
+import org.example.likelion.service.jwt.IJwtService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
