@@ -5,7 +5,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.likelion.service.auth.UserDetailsServiceImpl;
-import org.example.likelion.service.jwt.IJwtService;
 import org.example.likelion.service.jwt.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ import java.io.IOException;
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
-    private IJwtService jwtUtils;
+    private JwtService jwtUtils;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
