@@ -19,13 +19,17 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public List<Product> gets() {
-        return productRepository.findAll();
+    public List<Product> gets(String productName) {
+        return productRepository.findAllByName(productName);
     }
 
     @Override
     public Page<Product> gets(String name, Pageable pageable) {
-        return productRepository.findByNameContainsIgnoreCase(name, pageable);
+        var productPage = productRepository.findByNameContainsIgnoreCase(name, pageable);
+        productPage.stream().forEach((e) ->
+                e.setImgLink(productRepository.findImgLinkByProductName(e.getName()))
+        );
+        return productPage;
     }
 
     @Override

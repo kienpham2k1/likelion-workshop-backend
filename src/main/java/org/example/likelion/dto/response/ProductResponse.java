@@ -12,6 +12,7 @@ public class ProductResponse {
     private String name;
     private String description;
     private String color;
+    private String imgLink;
     private int size;
     private int quantity;
     private double price;

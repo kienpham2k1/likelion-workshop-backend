@@ -23,8 +23,8 @@ public class ProductController {
 
     @GetMapping("/getList")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> getProducts() {
-        return productService.gets().stream().map(IProductMapper.INSTANCE::toDtoResponse).toList();
+    public List<ProductResponse> getProducts(@RequestParam String productName) {
+        return productService.gets(productName).stream().map(IProductMapper.INSTANCE::toDtoResponse).toList();
     }
 
     @GetMapping()
