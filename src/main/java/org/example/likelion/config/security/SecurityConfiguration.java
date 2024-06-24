@@ -47,7 +47,8 @@ public class SecurityConfiguration {
             "/configuration/security",
             "/swagger-ui/**",
             "/webjars/**",
-            "/swagger-ui.html"};
+            "/swagger-ui.html"
+    };
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -80,7 +81,10 @@ public class SecurityConfiguration {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req.requestMatchers(WHITE_LIST_URL)
                         .permitAll()
-//                        .requestMatchers("/api/v1/product/**").hasAnyRole(ADMIN.name())
+                        .requestMatchers(GET, "/api/v1/product/**")
+                        .permitAll()
+                        .requestMatchers(GET, "/api/v1/category/**")
+                        .permitAll()
 //                        .requestMatchers(
 //                                new AntPathRequestMatcher("/api/v1/product/**", HttpMethod.POST.toString()),
 //                                new AntPathRequestMatcher("/api/v1/product/**", HttpMethod.PUT.toString()),
@@ -92,25 +96,24 @@ public class SecurityConfiguration {
                                             request.getMethod().equals(HttpMethod.PUT.toString()) ||
                                             request.getMethod().equals(HttpMethod.DELETE.toString());
                                 },
-                                new AntPathRequestMatcher("/api/v1/product/**")
-                        ).hasRole(ADMIN.name())
+                                new AntPathRequestMatcher("/api/v1/product/**"))
+                        .hasRole(ADMIN.name())
                         .requestMatchers(
                                 request -> {
                                     return request.getMethod().equals(HttpMethod.POST.toString()) ||
                                             request.getMethod().equals(HttpMethod.PUT.toString()) ||
                                             request.getMethod().equals(HttpMethod.DELETE.toString());
                                 },
-                                new AntPathRequestMatcher("/api/v1/category/**")
-                        ).hasRole(ADMIN.name())
-                        .requestMatchers(GET, "/api/v1/product/**").hasAnyAuthority(USER_READ.name())
+                                new AntPathRequestMatcher("/api/v1/category/**"))
+                        .hasRole(ADMIN.name())
                         .requestMatchers(
                                 request -> {
                                     return request.getMethod().equals(POST.toString()) ||
                                             request.getMethod().equals(PUT.toString()) ||
                                             request.getMethod().equals(DELETE.toString());
                                 },
-                                new AntPathRequestMatcher("/api/v1/order/**")
-                        ).authenticated()
+                                new AntPathRequestMatcher("/api/v1/order/**"))
+                        .authenticated()
                         .requestMatchers(
                                 request -> {
                                     return request.getMethod().equals(GET.toString()) ||
@@ -118,8 +121,8 @@ public class SecurityConfiguration {
                                             request.getMethod().equals(PUT.toString()) ||
                                             request.getMethod().equals(DELETE.toString());
                                 },
-                                new AntPathRequestMatcher("/api/v1/order-detail/**")
-                        ).authenticated()
+                                new AntPathRequestMatcher("/api/v1/order-detail/**"))
+                        .authenticated()
                         .anyRequest()
                         .authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
