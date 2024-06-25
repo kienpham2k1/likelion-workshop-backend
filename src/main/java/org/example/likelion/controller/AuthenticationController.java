@@ -46,18 +46,4 @@ public class AuthenticationController {
                              HttpServletResponse response) throws IOException {
         authenticationService.refreshToken(request, response);
     }
-
-    @GetMapping("/get-user")
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> getUser() {
-
-        return userRepository.findAll();
-    }
-
-    @GetMapping("/get-role")
-    @ResponseStatus(HttpStatus.OK)
-    public String getRole() {
-        return ADMIN.name();
-    }
-
 }

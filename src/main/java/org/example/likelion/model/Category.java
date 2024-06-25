@@ -6,7 +6,10 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category"
+        , uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name"})
+})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,6 +22,8 @@ public class Category {
     private String id;
     @Column(nullable = false)
     private String name;
+    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+    private boolean isDeleted;
     @OneToMany(mappedBy = "category")
     private Set<Product> product;
     @OneToMany(mappedBy = "category")

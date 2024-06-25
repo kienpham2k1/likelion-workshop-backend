@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.nio.file.AccessDeniedException;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,9 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     // 404
-    @ExceptionHandler({ResourceNotFoundException.class, EntityNotFoundException.class, OutOfStockProductException.class})
+    @ExceptionHandler({ResourceNotFoundException.class
+            , EntityNotFoundException.class
+            , OutOfStockProductException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public <T extends RuntimeException> ErrorResponseEntity resourceNotFoundExceptionHandler(T ex, WebRequest request) {
         ErrorResponseEntity errorResponse = ErrorResponseEntity.builder()
@@ -37,7 +40,7 @@ public class GlobalExceptionHandler {
                 .description(request.getDescription(false))
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn("Resource not found: %s".formatted(errorResponse));
+        log.error("Exception: %s, description: %s, message: %s".formatted(ex.getClass().getSimpleName(), errorResponse.getDescription(), ex.getMessage()));
         return errorResponse;
     }
 
@@ -45,13 +48,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponseEntity dataIntegrityViolationExceptionHandler(DataIntegrityViolationException ex, WebRequest request) {
+        var message = ex.getSuppressed();
         ErrorResponseEntity errorResponse = ErrorResponseEntity.builder()
                 .status(HttpStatus.CONFLICT)
                 .message(ex.getMessage())
                 .description(request.getDescription(false))
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn("Data integrity violation exception: %s".formatted(errorResponse.getDescription()));
+        log.error("Exception: %s, description: %s, message: %s".formatted(ex.getClass().getSimpleName(), errorResponse.getDescription(), ex.getMessage()));
         return errorResponse;
     }
 
@@ -66,7 +70,7 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        log.error(errors.toString());
+        log.error("Exception: %s, %s".formatted(ex.getClass().getSimpleName(), errors.toString()));
         return ErrorResponseEntity.builder()
                 .status(HttpStatus.BAD_REQUEST)
                 .message("Validate error")
@@ -85,8 +89,7 @@ public class GlobalExceptionHandler {
                 .message(ex.getMessage())
                 .description(request.getDescription(false))
                 .timestamp(LocalDateTime.now()).build();
-        log.error("Exception: %s".formatted(errorResponse));
-        log.error(ex.getMessage(), ex.getMessage());
+        log.error("Exception: %s, description: %s, message: %s".formatted(ex.getClass().getSimpleName(), errorResponse.getDescription(), ex.getMessage()));
         return errorResponse;
     }
 
@@ -113,33 +116,45 @@ public class GlobalExceptionHandler {
                 .description(request.getDescription(false))
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn("Bad credentials: %s".formatted(errorResponse));
+        log.error("Exception: %s, description: %s, message: %s".formatted(ex.getClass().getSimpleName(), errorResponse.getDescription(), ex.getMessage()));
         return errorResponse;
     }
 
     @ExceptionHandler({JwtException.class})
     public <T extends RuntimeException> ErrorResponseEntity jwtExceptionHandler(T ex, WebRequest request) {
-        ErrorResponseEntity err = ErrorResponseEntity.builder()
+        ErrorResponseEntity errorResponse = ErrorResponseEntity.builder()
                 .status(HttpStatus.UNAUTHORIZED)
                 .message(ErrorMessage.JWT_TOKEN_INVALID)
                 .description(request.getDescription(false))
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn("JWT exception: %s".formatted(err));
-        return err;
+        log.error("Exception: %s, description: %s, message: %s".formatted(ex.getClass().getSimpleName(), errorResponse.getDescription(), ex.getMessage()));
+        return errorResponse;
     }
 
 
     //403
     @ExceptionHandler({AccessDeniedException.class})
     public <T extends RuntimeException> ErrorResponseEntity accessDeniedExceptionHandler(T ex, WebRequest request) {
-        ErrorResponseEntity err = ErrorResponseEntity.builder()
+        ErrorResponseEntity errorResponse = ErrorResponseEntity.builder()
                 .status(HttpStatus.FORBIDDEN)
                 .message(ex.getMessage())
                 .description(request.getDescription(false))
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn("Access denied exception: %s".formatted(err));
-        return err;
+        log.error("Exception: %s, description: %s, message: %s".formatted(ex.getClass().getSimpleName(), errorResponse.getDescription(), ex.getMessage()));
+        return errorResponse;
+    }
+    @ExceptionHandler(SQLException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseEntity SQLException(SQLException ex, WebRequest request) {
+        ErrorResponseEntity errorResponse = ErrorResponseEntity.builder()
+                .status(HttpStatus.CONFLICT)
+                .message(ex.getMessage())
+                .description(request.getDescription(false))
+                .timestamp(LocalDateTime.now())
+                .build();
+        log.error("Exception: %s, description: %s, message: %s".formatted(ex.getClass().getSimpleName(), errorResponse.getDescription(), ex.getMessage()));
+        return errorResponse;
     }
 }
