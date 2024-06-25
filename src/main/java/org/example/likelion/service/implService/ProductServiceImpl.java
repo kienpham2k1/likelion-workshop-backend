@@ -25,11 +25,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> gets(String name, Pageable pageable) {
-        var productPage = productRepository.findByNameContainsIgnoreCase(name, pageable);
-        productPage.stream().forEach((e) ->
-                e.setImgLink(productRepository.findImgLinkByProductName(e.getName()))
-        );
-        return productPage;
+        return productRepository.findByNameContainsIgnoreCase(name, pageable);
     }
 
     @Override
