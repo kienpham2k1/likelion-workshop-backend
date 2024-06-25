@@ -2,6 +2,7 @@ package org.example.likelion.service.implService;
 
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
+import org.example.likelion.dto.auth.UserDetailsImpl;
 import org.example.likelion.enums.OrderStatus;
 import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.exception.OutOfStockProductException;
@@ -10,6 +11,7 @@ import org.example.likelion.repository.OrderRepository;
 import org.example.likelion.service.OrderDetailService;
 import org.example.likelion.service.OrderService;
 import org.example.likelion.service.ProductService;
+import org.example.likelion.service.auth.AuthenticationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductService productService;
     private final OrderDetailService orderDetailService;
-
+    private final AuthenticationService authenticationService;
     @Override
     public List<Order> gets() {
         return orderRepository.findAll();
@@ -41,11 +43,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order create(Order order) {
+        UserDetailsImpl userDetails = authenticationService.getCurrentUser().orElseThrow(()-> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
         order.setCreateDate(LocalDate.now());
         order.getOrderDetails().forEach(e -> {
             if (!productService.isStocking(e.getProductId(), e.getQuantity()))
                 throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_PRODUCT);
         });
+        order.setUserId(userDetails.getId());
         Order o = orderRepository.save(order);
         order.getOrderDetails().forEach(e -> {
             e.setOrderId(o.getId());

@@ -108,12 +108,13 @@ public class SecurityConfiguration {
                         .hasRole(ADMIN.name())
                         .requestMatchers(
                                 request -> {
-                                    return request.getMethod().equals(POST.toString()) ||
+                                    return request.getMethod().equals(GET.toString()) ||
+                                            request.getMethod().equals(POST.toString()) ||
                                             request.getMethod().equals(PUT.toString()) ||
                                             request.getMethod().equals(DELETE.toString());
                                 },
                                 new AntPathRequestMatcher("/api/v1/order/**"))
-                        .authenticated()
+                        .hasAnyRole(ADMIN.name(), USER.name())
                         .requestMatchers(
                                 request -> {
                                     return request.getMethod().equals(GET.toString()) ||
