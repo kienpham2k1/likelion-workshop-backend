@@ -8,7 +8,10 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "product")
+@Table(name = "product",
+        uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "size", "color"})
+})
 @Getter
 @Setter
 @AllArgsConstructor
