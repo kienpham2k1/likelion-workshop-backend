@@ -41,10 +41,11 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private Set<OrderDetail> orderDetails;
 
-    public Product(String name, String description, double price, int quantity) {
+    public Product(String name, String description, double price, int quantity, String imgLink) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
+        this.imgLink = imgLink;
     }
 }

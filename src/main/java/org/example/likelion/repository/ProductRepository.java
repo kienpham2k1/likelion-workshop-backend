@@ -16,12 +16,11 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
 
-    @Query("select new Product ( p.name, p.description, p.price, cast(sum(p.quantity) as int)) from Product p " +
+    @Query("select new Product ( p.name, p.description, p.price, cast(sum(p.quantity) as int), (select p2.imgLink from Product p2 where p2.name = p.name order by p2.id limit 1) )" +
+            "from Product p " +
             "where :name is null or upper(CAST(p.name as string)) like upper(CAST(concat('%', :name, '%')as string)) " +
             "group by p.name, p.description, p.price")
     Page<Product> findByNameContainsIgnoreCase(@Param("name") String name, Pageable pageable);
-    @Query("select p.imgLink from Product p where p.name = :productName order by p.id limit 1")
-    String findImgLinkByProductName(@Param("productName") String productName);
 
     List<Product> findAllByName(String productName);
 }
