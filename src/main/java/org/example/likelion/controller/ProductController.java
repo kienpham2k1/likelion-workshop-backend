@@ -1,9 +1,13 @@
 package org.example.likelion.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.likelion.dto.mapper.IProductMapper;
 import org.example.likelion.dto.request.ProductRequest;
+import org.example.likelion.dto.request.UpdatePriceProductRequest;
+import org.example.likelion.dto.request.UpdateQuantityProductRequest;
 import org.example.likelion.dto.response.ProductResponse;
 import org.example.likelion.service.ProductService;
 import org.springframework.data.domain.Page;
@@ -18,6 +22,8 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/product")
+@Tag(name = "Product Resource")
+@Slf4j
 public class ProductController {
     private final ProductService productService;
 
@@ -60,5 +66,17 @@ public class ProductController {
     @ResponseStatus(HttpStatus.OK)
     public void create(@PathVariable String id) {
         productService.delete(id);
+    }
+
+    @PutMapping("/updateQuantity/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateQuantity(@PathVariable String id, @RequestBody @Valid UpdateQuantityProductRequest request) {
+        productService.updateQuantity(id, request);
+    }
+
+    @PutMapping("/updateProductPrice/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateProductPrice(@PathVariable String name, @RequestBody @Valid UpdatePriceProductRequest request) {
+        productService.updateProductPrice(name, request);
     }
 }

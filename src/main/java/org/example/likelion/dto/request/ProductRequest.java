@@ -21,7 +21,7 @@ public class ProductRequest {
     private String color;
     @Positive
     private int size;
-    @Min(1)
+    @Min(0)
     @NotNull
     private int quantity;
     @Min(1)
