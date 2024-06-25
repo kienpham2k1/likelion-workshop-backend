@@ -1,5 +1,7 @@
 package org.example.likelion.service;
 
+import org.example.likelion.dto.request.UpdatePriceProductRequest;
+import org.example.likelion.dto.request.UpdateQuantityProductRequest;
 import org.example.likelion.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,4 +25,7 @@ public interface ProductService {
 
     boolean isStocking(String id, int quantity);
 
+    Product updateQuantity(String id, UpdateQuantityProductRequest request);
+
+    List<Product> updateProductPrice(String name, UpdatePriceProductRequest request);
 }
