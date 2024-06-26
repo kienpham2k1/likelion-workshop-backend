@@ -22,7 +22,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-import static org.example.likelion.utils.CheckValidResourceToUser.isValidToUser;
+import static org.example.likelion.utils.ResourceUtils.isValidResourceForUser;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order get(String id) {
         var order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
-        if (!isValidToUser(order.getUserId())) throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
+        if (!isValidResourceForUser(order.getUserId())) throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
         return order;
     }
 
@@ -80,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order updateStatus(String id, OrderStatus status) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
-        if (!isValidToUser(order.getUserId())) throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
+        if (!isValidResourceForUser(order.getUserId())) throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
         order.setOrderStatus(status);
         return orderRepository.save(order);
     }
@@ -88,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void cancel(String id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
-        if (!isValidToUser(order.getUserId())) throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
+        if (!isValidResourceForUser(order.getUserId())) throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
         order.setCancel(true);
         orderRepository.save(order);
     }
