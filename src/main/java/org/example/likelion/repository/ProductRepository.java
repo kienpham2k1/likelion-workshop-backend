@@ -1,26 +1,32 @@
 package org.example.likelion.repository;
 
-import org.example.likelion.dto.auth.Role;
 import org.example.likelion.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
 
-    @Query("select new Product ( p.name, p.description, p.price, cast(sum(p.quantity) as int), (select p2.imgLink from Product p2 where p2.name = p.name order by p2.id limit 1) )" +
+    @Query("select new Product ( p.name, p.description, p.price, cast(sum(p.quantity) as int), min(p.imgLink))" +
             "from Product p " +
             "where :name is null or upper(CAST(p.name as string)) like upper(CAST(concat('%', :name, '%')as string)) " +
-            "group by p.name, p.description, p.price")
-    Page<Product> findByNameContainsIgnoreCase(@Param("name") String name, Pageable pageable);
+            "and :category is null or p.categoryId = :category " +
+            "and :size is null or p.size = :size " +
+            "and (p.price  >= :priceMin or :priceMin is null)" +
+            "and (p.price  <= :priceMax OR :priceMax is null)" +
+            "group by p.name, p.description, p.price, p.categoryId, p.category")
+    Page<Product> findByNameContainsIgnoreCase(@Param("name") String name,
+                                               @Param("category") String category,
+                                               @Param("size") Integer size,
+                                               @Param("priceMin") Double priceMin,
+                                               @Param("priceMax") Double priceMax,
+                                               Pageable pageable);
 
     List<Product> findAllByName(String productName);
 }
