@@ -17,13 +17,15 @@ public interface ProductRepository extends JpaRepository<Product, String> {
             "from Product p " +
             "where (:name is null or upper(CAST(p.name as string)) like upper(CAST(concat('%', :name, '%')as string))) " +
             "and (:categoryId is null or p.categoryId = :categoryId) " +
-            "and (:size is null or p.size = :size) " +
+            "and (:sizes is null or p.size in  :sizes) " +
+            "and (:colors is null or p.size in :colors) " +
             "and (p.price  >= :priceMin or :priceMin is null)" +
             "and (p.price  <= :priceMax OR :priceMax is null)" +
             "group by p.name, p.description, p.price, p.categoryId, p.category")
     Page<Product> findByNameContainsIgnoreCase(@Param("name") String name,
                                                @Param("categoryId") String categoryId,
-                                               @Param("size") Integer size,
+                                               @Param("sizes") List<Integer> sizes,
+                                               @Param("colors") List<String> colors,
                                                @Param("priceMin") Double priceMin,
                                                @Param("priceMax") Double priceMax,
                                                Pageable pageable);
