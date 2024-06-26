@@ -1,5 +1,6 @@
 package org.example.likelion.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +28,14 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
+    @Operation(summary = "Get Product By Name")
     @GetMapping("/getList")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getProducts(@RequestParam String productName) {
         return productService.gets(productName).stream().map(IProductMapper.INSTANCE::toDtoResponse).toList();
     }
 
+    @Operation(summary = "Get List Of Product Filter")
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public Page<ProductResponse> getProducts(@RequestParam(required = false) String name,
@@ -48,36 +51,42 @@ public class ProductController {
         return productService.gets(name, category, size, priceMin, priceMax, pageable).map(IProductMapper.INSTANCE::toDtoResponse);
     }
 
+    @Operation(summary = "Get Detail Product By ID")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProductResponse getCategory(@PathVariable String id) {
         return IProductMapper.INSTANCE.toDtoResponse(productService.get(id));
     }
 
+    @Operation(summary = "Create Product")
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody @Valid ProductRequest request) {
         productService.create(IProductMapper.INSTANCE.toEntity(request));
     }
 
+    @Operation(summary = "Update Product")
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable String id, @RequestBody @Valid ProductRequest request) {
         productService.update(id, IProductMapper.INSTANCE.toEntity(request));
     }
 
+    @Operation(summary = "Delete Product")
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void create(@PathVariable String id) {
         productService.delete(id);
     }
 
+    @Operation(summary = "Update Product Quantity")
     @PutMapping("/updateQuantity/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void updateQuantity(@PathVariable String id, @RequestBody @Valid UpdateQuantityProductRequest request) {
         productService.updateQuantity(id, request);
     }
 
+    @Operation(summary = "update Product Price")
     @PutMapping("/updateProductPrice/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void updateProductPrice(@PathVariable String name, @RequestBody @Valid UpdatePriceProductRequest request) {
