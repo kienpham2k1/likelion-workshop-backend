@@ -8,4 +8,5 @@ public class ErrorMessage {
     public static final String OUT_OF_STOCK_PRODUCT = "Out of stock product!";
     public static final String JWT_TOKEN_INVALID = "JWT token is expired or invalid!";
     public static final String USER_NOT_FOUND = "User not found!";
+    public static final String USER_ACCESS_DENIED = "User don't have permission to access this resource!";
 }
