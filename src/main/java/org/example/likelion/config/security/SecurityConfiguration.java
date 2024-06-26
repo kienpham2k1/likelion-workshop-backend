@@ -86,6 +86,24 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers(GET, "/api/v1/category/**")
                         .permitAll()
+                        .requestMatchers(
+                                request -> {
+                                    return request.getMethod().equals(GET.toString()) ||
+                                            request.getMethod().equals(PUT.toString()) ||
+                                            request.getMethod().equals(PUT.toString()) ||
+                                            request.getMethod().equals(DELETE.toString());
+                                },
+                                new AntPathRequestMatcher("/api/v1/order-detail/**"))
+                        .authenticated()
+                        .requestMatchers(
+                                request -> {
+                                    return request.getMethod().equals(GET.toString()) ||
+                                            request.getMethod().equals(POST.toString()) ||
+                                            request.getMethod().equals(PUT.toString()) ||
+                                            request.getMethod().equals(DELETE.toString());
+                                },
+                                new AntPathRequestMatcher("/api/v1/order/**"))
+                        .hasAnyRole(USER.name(), ADMIN.name())
 //                        .requestMatchers(
 //                                new AntPathRequestMatcher("/api/v1/product/**", HttpMethod.POST.toString()),
 //                                new AntPathRequestMatcher("/api/v1/product/**", HttpMethod.PUT.toString()),
@@ -107,23 +125,7 @@ public class SecurityConfiguration {
                                 },
                                 new AntPathRequestMatcher("/api/v1/category/**"))
                         .hasRole(ADMIN.name())
-                        .requestMatchers(
-                                request -> {
-                                    return request.getMethod().equals(POST.toString()) ||
-                                            request.getMethod().equals(PUT.toString()) ||
-                                            request.getMethod().equals(DELETE.toString());
-                                },
-                                new AntPathRequestMatcher("/api/v1/order/**"))
-                        .authenticated()
-                        .requestMatchers(
-                                request -> {
-                                    return request.getMethod().equals(GET.toString()) ||
-                                            request.getMethod().equals(PUT.toString()) ||
-                                            request.getMethod().equals(PUT.toString()) ||
-                                            request.getMethod().equals(DELETE.toString());
-                                },
-                                new AntPathRequestMatcher("/api/v1/order-detail/**"))
-                        .authenticated()
+
                         .anyRequest()
                         .authenticated())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))

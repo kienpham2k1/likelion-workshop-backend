@@ -9,9 +9,12 @@ import org.example.likelion.service.OrderDetailService;
 import org.example.likelion.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static org.example.likelion.utils.ResourceUtils.isValidResourceForUser;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +34,14 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public OrderDetail get(String id) {
-        return orderDetailRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_DETAIL_NOT_FOUND));
+        var orderDetail = orderDetailRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_DETAIL_NOT_FOUND));
+        if (!isValidResourceForUser(orderDetail.getOrder().getUserId()))
+            throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
+        return orderDetail;
     }
 
     @Override
     public OrderDetail create(OrderDetail orderDetail) {
-      return   orderDetailRepository.save(orderDetail);
+        return orderDetailRepository.save(orderDetail);
     }
 }
