@@ -3,6 +3,8 @@ package org.example.likelion.service.implService;
 import lombok.AllArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
 import org.example.likelion.dto.mapper.IProductMapperImpl;
+import org.example.likelion.dto.request.UpdatePriceProductRequest;
+import org.example.likelion.dto.request.UpdateQuantityProductRequest;
 import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.Product;
 import org.example.likelion.repository.ProductRepository;
@@ -24,8 +26,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> gets(String name, Pageable pageable) {
-        return productRepository.findByNameContainsIgnoreCase(name, pageable);
+    public Page<Product> gets(String name, String categoryId, List<Integer> sizes, List<String> colors, Double priceMin, Double priceMax, Pageable pageable) {
+        return productRepository.findByNameContainsIgnoreCase(name, categoryId, sizes, colors, priceMin, priceMax, pageable);
     }
 
     @Override
@@ -62,5 +64,23 @@ public class ProductServiceImpl implements ProductService {
     public boolean isStocking(String id, int quantity) {
         Product product = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PRODUCT_NOT_FOUND));
         return product.getQuantity() >= quantity;
+    }
+
+    @Override
+    public Product updateQuantity(String id, UpdateQuantityProductRequest request) {
+        Product cur = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PRODUCT_NOT_FOUND));
+        cur.setQuantity(request.getQuantity());
+        return productRepository.save(cur);
+    }
+
+    @Override
+    public List<Product> updateProductPrice(String name, UpdatePriceProductRequest request) {
+        List<Product> products = gets(name);
+
+        for (Product product : products) {
+            product.setPrice(request.getPrice());
+        }
+
+        return productRepository.saveAll(products);
     }
 }

@@ -10,8 +10,8 @@ import java.util.Set;
 @Entity
 @Table(name = "product",
         uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"name", "size", "color"})
-})
+                @UniqueConstraint(columnNames = {"name", "size", "color"})
+        })
 @Getter
 @Setter
 @AllArgsConstructor
@@ -44,11 +44,13 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private Set<OrderDetail> orderDetails;
 
-    public Product(String name, String description, double price, int quantity, String imgLink) {
+    public Product(String name, String description, double price, int quantity, String imgLink, String categoryId, Category category) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.imgLink = imgLink;
+        this.categoryId = categoryId;
+        this.category = category;
     }
 }

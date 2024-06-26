@@ -1,5 +1,7 @@
 package org.example.likelion.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.mapper.IOrderDetailMapper;
 import org.example.likelion.dto.response.OrderDetailResponse;
@@ -16,15 +18,18 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/order-detail")
+@Tag(name = "Order Detail Resource")
 public class OrderDetailController {
     private final OrderDetailService orderDetailService;
 
+    @Operation(summary = "Get All Order Detail")
     @GetMapping("/getList")
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDetailResponse> getProducts(@RequestParam String orderId) {
         return orderDetailService.gets(orderId).stream().map(IOrderDetailMapper.INSTANCE::toDtoResponse).toList();
     }
 
+    @Operation(summary = "Get Order Detail Filter")
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public Page<OrderDetailResponse> getProducts(
@@ -37,6 +42,7 @@ public class OrderDetailController {
         return orderDetailService.gets(orderId, pageable).map(IOrderDetailMapper.INSTANCE::toDtoResponse);
     }
 
+    @Operation(summary = "Get Order Detail by ID")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OrderDetailResponse getCategory(@PathVariable String id) {

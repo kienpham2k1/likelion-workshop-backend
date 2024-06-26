@@ -1,5 +1,7 @@
 package org.example.likelion.service;
 
+import org.example.likelion.dto.request.UpdatePriceProductRequest;
+import org.example.likelion.dto.request.UpdateQuantityProductRequest;
 import org.example.likelion.model.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +11,7 @@ import java.util.List;
 public interface ProductService {
     List<Product> gets(String productName);
 
-    Page<Product> gets(String name, Pageable pageable);
+    Page<Product> gets(String name, String categoryId, List<Integer> sizes, List<String> colors, Double priceMin, Double priceMax, Pageable pageable);
 
     Product get(String id);
 
@@ -23,4 +25,7 @@ public interface ProductService {
 
     boolean isStocking(String id, int quantity);
 
+    Product updateQuantity(String id, UpdateQuantityProductRequest request);
+
+    List<Product> updateProductPrice(String name, UpdatePriceProductRequest request);
 }
