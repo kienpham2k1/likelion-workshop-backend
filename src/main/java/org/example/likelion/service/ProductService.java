@@ -11,7 +11,7 @@ import java.util.List;
 public interface ProductService {
     List<Product> gets(String productName);
 
-    Page<Product> gets(String name, String category, Integer size, Double priceMin, Double priceMax, Pageable pageable);
+    Page<Product> gets(String name, String categoryId, Integer size, Double priceMin, Double priceMax, Pageable pageable);
 
     Product get(String id);
 
