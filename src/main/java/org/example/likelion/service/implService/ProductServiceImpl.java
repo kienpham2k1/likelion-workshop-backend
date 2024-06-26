@@ -26,8 +26,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> gets(String name, String category, Integer size, Double priceMin, Double priceMax, Pageable pageable) {
-        return productRepository.findByNameContainsIgnoreCase(name, category ,size, priceMin, priceMax, pageable);
+    public Page<Product> gets(String name, String categoryId, List<Integer> sizes, List<String> colors, Double priceMin, Double priceMax, Pageable pageable) {
+        return productRepository.findByNameContainsIgnoreCase(name, categoryId, sizes, colors, priceMin, priceMax, pageable);
     }
 
     @Override
