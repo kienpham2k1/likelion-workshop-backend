@@ -1,5 +1,7 @@
 package org.example.likelion.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.mapper.IOrderMapper;
@@ -21,17 +23,20 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/order")
+@Tag(name = "Order Resource")
 public class OrderController {
     private final OrderService orderService;
     private final OrderDetailService orderDetailService;
     private final ProductService productService;
 
+    @Operation(summary = "Get Order List")
     @GetMapping("/getList")
     @ResponseStatus(HttpStatus.OK)
     public List<OrderResponse> getProducts() {
         return orderService.gets().stream().map(IOrderMapper.INSTANCE::toDtoResponse).toList();
     }
 
+    @Operation(summary = "Get Order List Filter")
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public Page<OrderResponse> getProducts(@RequestParam(defaultValue = "0") Integer pageNo,
@@ -42,29 +47,34 @@ public class OrderController {
         return orderService.gets(pageable).map(IOrderMapper.INSTANCE::toDtoResponse);
     }
 
+    @Operation(summary = "Get Order by ID")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public OrderResponse getCategory(@PathVariable String id) {
         return IOrderMapper.INSTANCE.toDtoResponse(orderService.get(id));
     }
 
+    @Operation(summary = "Create Order")
     @PostMapping("/create")
     public void create(@RequestBody @Valid OrderRequest request) {
         orderService.create(IOrderMapper.INSTANCE.toEntity(request));
     }
 
+    @Operation(summary = "Update Order")
     @PutMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable String id, @RequestBody @Valid OrderRequest request) {
         orderService.update(id, IOrderMapper.INSTANCE.toEntity(request));
     }
 
+    @Operation(summary = "Update Order")
     @PutMapping("/update-status/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void updateStatus(@PathVariable String id, @RequestBody @Valid OrderStatus status) {
         orderService.updateStatus(id, status);
     }
 
+    @Operation(summary = "Cancel Order")
     @DeleteMapping("/cancel/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void create(@PathVariable String id) {
