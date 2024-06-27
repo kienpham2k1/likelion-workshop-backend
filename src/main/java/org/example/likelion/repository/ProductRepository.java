@@ -18,16 +18,25 @@ public interface ProductRepository extends JpaRepository<Product, String> {
             "where (:name is null or upper(CAST(p.name as string)) like upper(CAST(concat('%', :name, '%')as string))) " +
             "and (:categoryId is null or p.categoryId = :categoryId) " +
             "and (:sizes is null or p.size in  :sizes) " +
-            "and (:colors is null or p.color in :colors) " +
+            "and (:colors is null or upper(p.color) in :colors) " +
             "and (p.price  >= :priceMin or :priceMin is null)" +
             "and (p.price  <= :priceMax OR :priceMax is null)" +
             "group by p.name, p.description, p.price, p.categoryId, p.category")
-    Page<Product> findByNameContainsIgnoreCase(@Param("name") String name,
-                                               @Param("categoryId") String categoryId,
-                                               @Param("sizes") List<Integer> sizes,
-                                               @Param("colors") List<String> colors,
-                                               @Param("priceMin") Double priceMin,
-                                               @Param("priceMax") Double priceMax,
-                                               Pageable pageable);
+    Page<Product> findAllByFilter(@Param("name") String name,
+                                  @Param("categoryId") String categoryId,
+                                  @Param("sizes") List<Integer> sizes,
+                                  @Param("colors") List<String> colors,
+                                  @Param("priceMin") Double priceMin,
+                                  @Param("priceMax") Double priceMax,
+                                  Pageable pageable);
+
+    @Query("select p " +
+            "from Product p " +
+            "where (:categories is null or upper(p.category.name) in :categories) " +
+            "and (:colors is null or upper(p.color) in :colors)")
+    List<Product> findAllByFilter(@Param("categories") List<String> categories,
+                                  @Param("colors") List<String> colors,
+                                  Pageable pageable);
+
     List<Product> findAllByName(String productName);
 }

@@ -32,3 +32,6 @@ aws:
   region: ${REGION}
   s3:
     bucket: ${S3_BUKET_NAME}
+ai:
+  endpoint: https://correct-cortney-tzuy284-8410edb0.koyeb.app/recommendation
+  method: POST
