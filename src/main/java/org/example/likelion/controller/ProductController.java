@@ -41,8 +41,9 @@ public class ProductController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public Page<ProductResponse> getProducts(@RequestParam(required = false) String name,
-                                             @RequestParam(required = false) String category,
-                                             @RequestParam(required = false) Integer size,
+                                             @RequestParam(required = false) String categoryId,
+                                             @RequestParam(required = false) List<Integer> sizes,
+                                             @RequestParam(required = false) List<String> colors,
                                              @RequestParam(required = false) Double priceMin,
                                              @RequestParam(required = false) Double priceMax,
                                              @RequestParam(defaultValue = "0") Integer pageNo,
@@ -50,7 +51,7 @@ public class ProductController {
                                              @RequestParam(defaultValue = "asc") String sortDirection,
                                              @RequestParam(defaultValue = "name") String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
-        return productService.gets(name, category, size, priceMin, priceMax, pageable).map(IProductMapper.INSTANCE::toDtoResponse);
+        return productService.gets(name, categoryId, sizes, colors, priceMin, priceMax, pageable).map(IProductMapper.INSTANCE::toDtoResponse);
     }
 
     @Operation(summary = "Get Detail Product By ID")
