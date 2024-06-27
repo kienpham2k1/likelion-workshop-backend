@@ -60,12 +60,12 @@ public class OrderController {
         orderService.create(IOrderMapper.INSTANCE.toEntity(request));
     }
 
-    @Operation(summary = "Update Order")
-    @PutMapping("/update/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable String id, @RequestBody @Valid OrderRequest request) {
-        orderService.update(id, IOrderMapper.INSTANCE.toEntity(request));
-    }
+//    @Operation(summary = "Update Order")
+//    @PutMapping("/update/{id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    public void update(@PathVariable String id, @RequestBody @Valid OrderRequest request) {
+//        orderService.update(id, IOrderMapper.INSTANCE.toEntity(request));
+//    }
 
     @Operation(summary = "Update Order")
     @PutMapping("/update-status/{id}")

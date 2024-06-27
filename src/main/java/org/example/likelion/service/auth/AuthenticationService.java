@@ -10,6 +10,7 @@ import org.example.likelion.dto.response.UserRegisterResponse;
 import org.example.likelion.model.User;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public interface AuthenticationService {
     UserRegisterResponse register(UserRegisterRequest userRegisterRequest);
@@ -23,4 +24,5 @@ public interface AuthenticationService {
     void refreshToken(HttpServletRequest request,
                       HttpServletResponse response) throws IOException;
 
+    Optional<UserDetailsImpl> getCurrentUser();
 }
