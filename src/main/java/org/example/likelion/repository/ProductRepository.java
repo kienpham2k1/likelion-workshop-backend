@@ -22,12 +22,21 @@ public interface ProductRepository extends JpaRepository<Product, String> {
             "and (p.price  >= :priceMin or :priceMin is null)" +
             "and (p.price  <= :priceMax OR :priceMax is null)" +
             "group by p.name, p.description, p.price, p.categoryId, p.category")
-    Page<Product> findByNameContainsIgnoreCase(@Param("name") String name,
-                                               @Param("categoryId") String categoryId,
-                                               @Param("sizes") List<Integer> sizes,
-                                               @Param("colors") List<String> colors,
-                                               @Param("priceMin") Double priceMin,
-                                               @Param("priceMax") Double priceMax,
-                                               Pageable pageable);
+    Page<Product> findAllByFilter(@Param("name") String name,
+                                  @Param("categoryId") String categoryId,
+                                  @Param("sizes") List<Integer> sizes,
+                                  @Param("colors") List<String> colors,
+                                  @Param("priceMin") Double priceMin,
+                                  @Param("priceMax") Double priceMax,
+                                  Pageable pageable);
+
+    @Query("select new Product ( p.name, p.description, p.price, cast(sum(p.quantity) as int), min(p.imgLink), p.categoryId, p.category)" +
+            "from Product p " +
+            "where (:categories is null or p.category.name in :categories) " +
+            "and (:colors is null or p.color in :colors) " +
+            "group by p.name, p.description, p.price, p.categoryId, p.category ")
+    List<Product> findAllByFilter(@Param("categories") List<String> categories,
+                                  @Param("colors") List<String> colors);
+
     List<Product> findAllByName(String productName);
 }
