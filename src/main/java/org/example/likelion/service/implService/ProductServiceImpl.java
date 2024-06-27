@@ -1,24 +1,30 @@
 package org.example.likelion.service.implService;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
 import org.example.likelion.dto.mapper.IProductMapperImpl;
+import org.example.likelion.dto.request.ProductRequest;
 import org.example.likelion.dto.request.UpdatePriceProductRequest;
 import org.example.likelion.dto.request.UpdateQuantityProductRequest;
 import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.Product;
 import org.example.likelion.repository.ProductRepository;
 import org.example.likelion.service.ProductService;
+import org.example.likelion.service.cloud.s3.FileService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final FileService fileService;
 
     @Override
     public List<Product> gets(String productName) {
@@ -27,7 +33,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Page<Product> gets(String name, String category, Integer size, Double priceMin, Double priceMax, Pageable pageable) {
-        return productRepository.findByNameContainsIgnoreCase(name, category ,size, priceMin, priceMax, pageable);
+        return productRepository.findByNameContainsIgnoreCase(name, category, size, priceMin, priceMax, pageable);
     }
 
     @Override
@@ -36,14 +42,31 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product create(Product product) {
-        return productRepository.save(product);
+    @Transactional
+    public Product create(Product product, MultipartFile img) {
+        String imgLink;
+        try {
+            imgLink = fileService.uploadFile(img);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if (imgLink != null) {
+            product.setImgLink(imgLink);
+            return productRepository.save(product);
+        } else throw new EntityNotFoundException("");
     }
 
     @Override
-    public Product update(String id, Product product) {
+    @Transactional
+    public Product update(String id, ProductRequest request, MultipartFile img) {
         Product cur = productRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.PRODUCT_NOT_FOUND));
-        IProductMapperImpl.INSTANCE.updateEntityFromEntity(product, cur);
+        try {
+            var imgLink = fileService.uploadFile(img);
+            cur.setImgLink(imgLink);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        IProductMapperImpl.INSTANCE.updateEntityFromRequest(request, cur);
         return productRepository.save(cur);
     }
 

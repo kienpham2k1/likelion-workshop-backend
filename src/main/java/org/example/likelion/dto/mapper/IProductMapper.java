@@ -18,4 +18,7 @@ public interface IProductMapper {
 
     @Mapping(target = "id", ignore = true)
     void updateEntityFromEntity(Product from, @MappingTarget Product to);
+
+    @Mapping(target = "id", ignore = true)
+    void updateEntityFromRequest(ProductRequest from, @MappingTarget Product to);
 }
