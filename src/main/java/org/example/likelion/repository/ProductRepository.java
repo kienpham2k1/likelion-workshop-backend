@@ -29,6 +29,5 @@ public interface ProductRepository extends JpaRepository<Product, String> {
                                                @Param("priceMin") Double priceMin,
                                                @Param("priceMax") Double priceMax,
                                                Pageable pageable);
-
     List<Product> findAllByName(String productName);
 }

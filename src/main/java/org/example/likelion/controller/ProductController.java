@@ -15,7 +15,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -58,17 +60,17 @@ public class ProductController {
     }
 
     @Operation(summary = "Create Product")
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody @Valid ProductRequest request) {
-        productService.create(IProductMapper.INSTANCE.toEntity(request));
+    public void create(@RequestPart(name = "product") @Valid ProductRequest request, @RequestPart(name = "img") MultipartFile img) {
+        productService.create(IProductMapper.INSTANCE.toEntity(request), img);
     }
 
     @Operation(summary = "Update Product")
-    @PutMapping("/update/{id}")
+    @PutMapping(value =  "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable String id, @RequestBody @Valid ProductRequest request) {
-        productService.update(id, IProductMapper.INSTANCE.toEntity(request));
+    public void update(@PathVariable String id, @RequestPart(name = "product") @Valid ProductRequest request, @RequestPart(name = "img") MultipartFile img) {
+        productService.update(id, request, img);
     }
 
     @Operation(summary = "Delete Product")

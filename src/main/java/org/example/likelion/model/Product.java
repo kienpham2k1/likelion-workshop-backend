@@ -1,6 +1,7 @@
 package org.example.likelion.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
@@ -30,7 +31,7 @@ public class Product {
     private String color;
     @Positive
     private int size;
-    @Positive
+    @Min(0)
     private int quantity;
     @Column(name = "img_link")
     private String imgLink;
