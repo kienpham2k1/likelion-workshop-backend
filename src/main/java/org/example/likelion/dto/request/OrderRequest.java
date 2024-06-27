@@ -5,11 +5,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.example.likelion.enums.OrderStatus;
 
-import java.time.LocalDate;
 import java.util.List;
 
 
@@ -34,4 +32,5 @@ public class OrderRequest {
     @NotEmpty
     @Valid
     private List<OrderDetailRequest> orderDetails;
+    private String voucherId;
 }
