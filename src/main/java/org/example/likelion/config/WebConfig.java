@@ -2,6 +2,7 @@ package org.example.likelion.config;
 
 import com.fasterxml.jackson.databind.ser.std.DateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -22,6 +23,8 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
+    @Autowired
+    private OctetStreamReadMsgConverter octetStreamReadMsgConverter;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -30,6 +33,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedHeaders("*")
                 .allowedOrigins("*");
     }
+
     @Override
     public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         configurer.defaultContentType(MediaType.APPLICATION_JSON);
@@ -44,5 +48,6 @@ public class WebConfig implements WebMvcConfigurer {
                 DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
         converters.add(new ByteArrayHttpMessageConverter());
         converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
+        converters.add(octetStreamReadMsgConverter);
     }
 }

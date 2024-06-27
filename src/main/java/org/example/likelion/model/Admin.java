@@ -12,10 +12,7 @@ import java.util.Collection;
 import java.util.Set;
 
 @Entity
-@Table(name = "admin",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"username"})
-        })
+@Table(name = "admin")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -37,7 +34,6 @@ public class Admin extends UserDetailsImpl {
     private Role role;
     @OneToMany(mappedBy = "admin")
     private Set<Token> tokens;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();

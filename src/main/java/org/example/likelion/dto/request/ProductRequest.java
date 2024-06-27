@@ -19,6 +19,7 @@ public class ProductRequest {
     @NotNull
     @NotEmpty
     private String color;
+    private String imgLink;
     @Positive
     private int size;
     @Min(0)

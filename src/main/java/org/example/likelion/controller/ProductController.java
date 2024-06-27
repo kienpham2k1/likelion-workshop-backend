@@ -16,7 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -39,9 +41,8 @@ public class ProductController {
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public Page<ProductResponse> getProducts(@RequestParam(required = false) String name,
-                                             @RequestParam(required = false) String categoryId,
-                                             @RequestParam(required = false) List<Integer> sizes,
-                                             @RequestParam(required = false) List<String> colors,
+                                             @RequestParam(required = false) String category,
+                                             @RequestParam(required = false) Integer size,
                                              @RequestParam(required = false) Double priceMin,
                                              @RequestParam(required = false) Double priceMax,
                                              @RequestParam(defaultValue = "0") Integer pageNo,
@@ -49,7 +50,7 @@ public class ProductController {
                                              @RequestParam(defaultValue = "asc") String sortDirection,
                                              @RequestParam(defaultValue = "name") String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
-        return productService.gets(name, categoryId, sizes, colors, priceMin, priceMax, pageable).map(IProductMapper.INSTANCE::toDtoResponse);
+        return productService.gets(name, category, size, priceMin, priceMax, pageable).map(IProductMapper.INSTANCE::toDtoResponse);
     }
 
     @Operation(summary = "Get Detail Product By ID")
@@ -60,9 +61,9 @@ public class ProductController {
     }
 
     @Operation(summary = "Create Product")
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(@RequestBody @Valid ProductRequest request) {
+    public void create(@RequestPart @Valid ProductRequest request, @RequestPart MultipartFile img) {
         productService.create(IProductMapper.INSTANCE.toEntity(request));
     }
 
