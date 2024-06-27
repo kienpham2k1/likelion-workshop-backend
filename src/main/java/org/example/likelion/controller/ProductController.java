@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.example.likelion.dto.mapper.IProductMapper;
 import org.example.likelion.dto.request.ProductRequest;
 import org.example.likelion.dto.request.UpdatePriceProductRequest;
@@ -24,7 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/product")
 @Tag(name = "Product Resource")
-@Slf4j
 public class ProductController {
     private final ProductService productService;
 

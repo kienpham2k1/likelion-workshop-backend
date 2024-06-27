@@ -1,6 +1,7 @@
 package org.example.likelion.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -26,6 +27,13 @@ public class Voucher {
     private LocalDate expired_date;
     @Column(nullable = false)
     private LocalDate create_date;
+    @Column(nullable = false)
+    @Min(0)
+    private int quantity;
+    @Column(nullable = false)
+    private boolean isDelete;
+    @Column(nullable = false)
+    private boolean isActive;
     @ManyToMany(mappedBy = "vouchers")
     private Set<Order> orders;
 }
