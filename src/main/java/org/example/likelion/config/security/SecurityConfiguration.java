@@ -23,8 +23,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
-import static org.example.likelion.dto.auth.Permission.*;
-import static org.example.likelion.dto.auth.Role.*;
+import static org.example.likelion.dto.auth.Role.ADMIN;
+import static org.example.likelion.dto.auth.Role.USER;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -86,6 +86,8 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers(GET, "/api/v1/category/**")
                         .permitAll()
+                        .requestMatchers("/api/v1/voucher/**")
+                        .authenticated()
                         .requestMatchers(
                                 request -> {
                                     return request.getMethod().equals(GET.toString()) ||

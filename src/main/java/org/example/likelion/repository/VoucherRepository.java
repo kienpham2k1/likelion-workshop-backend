@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher, String> {
-    @Query("select v from Voucher v where v.isDelete = false")
+    @Query("select v from Voucher v where v.isDelete    = false")
     Page<Voucher> findAllByIsDeleteIsFalse(Pageable pageable);
 }

@@ -1,5 +1,6 @@
 package org.example.likelion.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -17,23 +18,20 @@ public class VoucherRequest {
     @NotEmpty
     private String name;
     @NotNull
-    @NotEmpty
     @Min(0)
     private double discountPercent;
     @NotNull
-    @NotEmpty
     private LocalDate expired_date;
+    @JsonIgnore
     @NotNull
-    @NotEmpty
     private LocalDate create_date;
     @NotNull
-    @NotEmpty
     @Min(0)
     private int quantity;
     @NotNull
-    @NotEmpty
+    @JsonIgnore
     private boolean isDelete;
     @NotNull
-    @NotEmpty
+    @JsonIgnore
     private boolean isActive;
 }

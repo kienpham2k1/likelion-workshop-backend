@@ -30,9 +30,9 @@ public class Voucher {
     @Column(nullable = false)
     @Min(0)
     private int quantity;
-    @Column(nullable = false)
+    @Column(name = "is_delete", nullable = false)
     private boolean isDelete;
-    @Column(nullable = false)
+    @Column(name = "is_active", nullable = false)
     private boolean isActive;
     @ManyToMany(mappedBy = "vouchers")
     private Set<Order> orders;
