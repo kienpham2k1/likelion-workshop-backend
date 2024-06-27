@@ -1,6 +1,7 @@
 package org.example.likelion.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
@@ -10,8 +11,8 @@ import java.util.Set;
 @Entity
 @Table(name = "product",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"name", "size", "color"})
-        })
+        @UniqueConstraint(columnNames = {"name", "size", "color"})
+})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -30,7 +31,7 @@ public class Product {
     private String color;
     @Positive
     private int size;
-    @Positive
+    @Min(0)
     private int quantity;
     @Column(name = "img_link")
     private String imgLink;
@@ -44,13 +45,11 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private Set<OrderDetail> orderDetails;
 
-    public Product(String name, String description, double price, int quantity, String imgLink, String categoryId, Category category) {
+    public Product(String name, String description, double price, int quantity, String imgLink) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
         this.imgLink = imgLink;
-        this.categoryId = categoryId;
-        this.category = category;
     }
 }

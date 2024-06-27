@@ -13,19 +13,17 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, String> {
 
-    @Query("select new Product ( p.name, p.description, p.price, cast(sum(p.quantity) as int), min(p.imgLink), p.categoryId, p.category)" +
+    @Query("select new Product ( p.name, p.description, p.price, cast(sum(p.quantity) as int), min(p.imgLink))" +
             "from Product p " +
-            "where (:name is null or upper(CAST(p.name as string)) like upper(CAST(concat('%', :name, '%')as string))) " +
-            "and (:categoryId is null or p.categoryId = :categoryId) " +
-            "and (:sizes is null or p.size in  :sizes) " +
-            "and (:colors is null or p.color in :colors) " +
+            "where :name is null or upper(CAST(p.name as string)) like upper(CAST(concat('%', :name, '%')as string)) " +
+            "and :category is null or p.categoryId = :category " +
+            "and :size is null or p.size = :size " +
             "and (p.price  >= :priceMin or :priceMin is null)" +
             "and (p.price  <= :priceMax OR :priceMax is null)" +
             "group by p.name, p.description, p.price, p.categoryId, p.category")
     Page<Product> findByNameContainsIgnoreCase(@Param("name") String name,
-                                               @Param("categoryId") String categoryId,
-                                               @Param("sizes") List<Integer> sizes,
-                                               @Param("colors") List<String> colors,
+                                               @Param("category") String category,
+                                               @Param("size") Integer size,
                                                @Param("priceMin") Double priceMin,
                                                @Param("priceMax") Double priceMax,
                                                Pageable pageable);
