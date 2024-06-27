@@ -13,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,8 @@ public class AIServiceImpl implements AIService {
     @Override
     public AIRecommendationResponse getRecommendation(AIRecommendationRequest request) {
         AIRecommendationResponse rp = (AIRecommendationResponse) apiCallerUtils.callApi(endpoint, HttpMethod.POST, request, AIRecommendationResponse.class);
-        List<ProductResponse> productsRecommendationRp = productRepository.findAllByFilter(rp.getShoes_type(), rp.getColor()).stream().map(iProductMapper::toDtoResponse).toList();
+        List<ProductResponse> productsRecommendationRp = productRepository.findAllByFilter(rp.getShoes_type(), rp.getColor()).stream().map(iProductMapper::toDtoResponse).collect(Collectors.toList());
+        //productRepository.findAllByFilter(rp.getShoes_type(), rp.getColor()).stream().map(iProductMapper::toDtoResponse).toList();
         rp.setProductResponses(productsRecommendationRp);
         return rp;
     }

@@ -30,11 +30,10 @@ public interface ProductRepository extends JpaRepository<Product, String> {
                                   @Param("priceMax") Double priceMax,
                                   Pageable pageable);
 
-    @Query("select new Product ( p.name, p.description, p.price, cast(sum(p.quantity) as int), min(p.imgLink), p.categoryId, p.category)" +
+    @Query("select p " +
             "from Product p " +
             "where (:categories is null or p.category.name in :categories) " +
-            "and (:colors is null or p.color in :colors) " +
-            "group by p.name, p.description, p.price, p.categoryId, p.category ")
+            "and (:colors is null or lower(p.color) in :colors) ")
     List<Product> findAllByFilter(@Param("categories") List<String> categories,
                                   @Param("colors") List<String> colors);
 
