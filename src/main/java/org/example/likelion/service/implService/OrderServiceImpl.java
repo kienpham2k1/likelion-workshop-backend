@@ -9,9 +9,11 @@ import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.exception.OutOfStockProductException;
 import org.example.likelion.model.Order;
 import org.example.likelion.repository.OrderRepository;
+import org.example.likelion.repository.VoucherRepository;
 import org.example.likelion.service.OrderDetailService;
 import org.example.likelion.service.OrderService;
 import org.example.likelion.service.ProductService;
+import org.example.likelion.service.VoucherService;
 import org.example.likelion.service.auth.AuthenticationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,8 @@ public class OrderServiceImpl implements OrderService {
     private final ProductService productService;
     private final OrderDetailService orderDetailService;
     private final AuthenticationService authenticationService;
+    private final VoucherService voucherService;
+    private final VoucherRepository voucherRepository;
 
     @Override
     public List<Order> gets() {
@@ -49,12 +53,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order get(String id) {
         var order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
-        if (!isValidResourceForUser(order.getUserId())) throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
+        if (!isValidResourceForUser(order.getUserId()))
+            throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
         return order;
     }
 
     @Override
     public Order create(Order order) {
+        var voucher = voucherRepository.findVoucherByIdAndActiveIsTrueAndQuantityGreaterThan(order.getVoucherId());
+        if (voucher == null) {
+            throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_VOUCHER);
+        }
         UserDetailsImpl userDetails = authenticationService.getCurrentUser().orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
         order.setCreateDate(LocalDate.now());
         order.getOrderDetails().forEach(e -> {
@@ -62,6 +71,7 @@ public class OrderServiceImpl implements OrderService {
                 throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_PRODUCT);
         });
         order.setUserId(userDetails.getId());
+        voucherService.reduce(order.getVoucherId());
         Order o = orderRepository.save(order);
         order.getOrderDetails().forEach(e -> {
             e.setOrderId(o.getId());
@@ -80,7 +90,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order updateStatus(String id, OrderStatus status) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
-        if (!isValidResourceForUser(order.getUserId())) throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
+        if (!isValidResourceForUser(order.getUserId()))
+            throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
         order.setOrderStatus(status);
         return orderRepository.save(order);
     }
@@ -88,7 +99,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void cancel(String id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
-        if (!isValidResourceForUser(order.getUserId())) throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
+        if (!isValidResourceForUser(order.getUserId()))
+            throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
         order.setCancel(true);
         orderRepository.save(order);
     }

@@ -18,4 +18,5 @@ public class OrderResponse {
     private String addressLine;
     private LocalDate createDate;
     List<OrderDetailResponse> orderDetails;
+    private String voucherId;
 }
