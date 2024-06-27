@@ -24,14 +24,14 @@ public class VoucherRequest {
     private LocalDate expired_date;
     @JsonIgnore
     @NotNull
-    private LocalDate create_date;
+    private LocalDate create_date = LocalDate.now();
     @NotNull
     @Min(0)
     private int quantity;
     @NotNull
     @JsonIgnore
-    private boolean isDelete;
+    private boolean deleted = false;
     @NotNull
     @JsonIgnore
-    private boolean isActive;
+    private boolean active = true;
 }

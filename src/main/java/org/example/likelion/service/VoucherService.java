@@ -19,5 +19,7 @@ public interface VoucherService {
 
     Voucher delete(String id);
 
-    Voucher updateStatus(String id, boolean status);
+    Voucher updateStatus(String id);
+
+    void reduce(String id);
 }

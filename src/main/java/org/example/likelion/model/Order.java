@@ -39,12 +39,11 @@ public class Order {
     private boolean isCancel;
     @OneToMany(mappedBy = "order")
     private Set<OrderDetail> orderDetails;
-    @ManyToMany
-    @JoinTable(
-            name = "ord_voucher",
-            joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "voucher_id"))
-    private Set<Voucher> vouchers;
+    @Column(name = "voucher_id", nullable = false)
+    private String voucherId;
+    @ManyToOne
+    @JoinColumn(name = "voucher_id", referencedColumnName = "voucher_id", insertable = false, updatable = false)
+    private Voucher voucher;
     @Column(name = "user_id", nullable = false)
     private String userId;
     @ManyToOne

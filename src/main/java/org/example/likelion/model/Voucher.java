@@ -31,9 +31,9 @@ public class Voucher {
     @Min(0)
     private int quantity;
     @Column(name = "is_delete", nullable = false)
-    private boolean isDelete;
+    private boolean deleted;
     @Column(name = "is_active", nullable = false)
-    private boolean isActive;
-    @ManyToMany(mappedBy = "vouchers")
+    private boolean active;
+    @OneToMany(mappedBy = "voucher")
     private Set<Order> orders;
 }

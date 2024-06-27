@@ -51,10 +51,23 @@ public class VoucherController {
         return IVoucherMapper.INSTANCE.toDtoResponse(voucherService.get(id));
     }
 
-    @Operation(summary = "Create Order")
+    @Operation(summary = "Create Voucher")
     @PostMapping("/create")
     public void create(@RequestBody @Valid VoucherRequest request) {
         voucherService.create(IVoucherMapper.INSTANCE.toEntity(request));
     }
 
+    @Operation(summary = "Delete Voucher")
+    @PutMapping("/delete/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void delete(@PathVariable String id) {
+        voucherService.delete(id);
+    }
+
+    @Operation(summary = "Update Voucher")
+    @PutMapping("/updateStatus/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateStatus(@PathVariable String id) {
+        voucherService.updateStatus(id);
+    }
 }

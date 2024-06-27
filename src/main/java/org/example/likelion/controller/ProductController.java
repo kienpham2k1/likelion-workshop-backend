@@ -74,7 +74,7 @@ public class ProductController {
     @Operation(summary = "Delete Product")
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void create(@PathVariable String id) {
+    public void delete(@PathVariable String id) {
         productService.delete(id);
     }
 

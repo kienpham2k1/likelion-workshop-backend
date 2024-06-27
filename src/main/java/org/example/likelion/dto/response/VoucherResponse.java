@@ -16,6 +16,6 @@ public class VoucherResponse {
     private LocalDate expired_date;
     private LocalDate create_date;
     private int quantity;
-    private boolean isDelete;
-    private boolean isActive;
+    private boolean deleted;
+    private boolean active;
 }

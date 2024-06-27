@@ -36,7 +36,7 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public Voucher create(Voucher voucher) {
         voucher.setCreate_date(LocalDate.now());
-        voucher.setDelete(false);
+        voucher.setDeleted(false);
         voucher.setActive(true);
         return voucherRepository.save(voucher);
     }
@@ -50,14 +50,22 @@ public class VoucherServiceImpl implements VoucherService {
     @Override
     public Voucher delete(String id) {
         Voucher vo = voucherRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.VOUCHER_DETAIL_NOT_FOUND));
-        vo.setDelete(true);
+        vo.setDeleted(true);
         return voucherRepository.save(vo);
     }
 
     @Override
-    public Voucher updateStatus(String id, boolean status) {
+    public Voucher updateStatus(String id) {
         Voucher vo = voucherRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.VOUCHER_DETAIL_NOT_FOUND));
-        vo.setActive(status);
+        // Change status by negative of status
+        vo.setActive(!vo.isActive());
         return voucherRepository.save(vo);
+    }
+
+    @Override
+    public void reduce(String id) {
+        Voucher vo = voucherRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.VOUCHER_DETAIL_NOT_FOUND));
+        vo.setQuantity(vo.getQuantity() - 1);
+        voucherRepository.save(vo);
     }
 }
