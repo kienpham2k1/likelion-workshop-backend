@@ -9,6 +9,8 @@ import org.example.likelion.repository.ProductRepository;
 import org.example.likelion.utils.APICallerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +30,10 @@ public class AIServiceImpl implements AIService {
     @Override
     public AIRecommendationResponse getRecommendation(AIRecommendationRequest request) {
         AIRecommendationResponse rp = (AIRecommendationResponse) apiCallerUtils.callApi(endpoint, HttpMethod.POST, request, AIRecommendationResponse.class);
-        List<ProductResponse> productsRecommendationRp = productRepository.findAllByFilter(rp.getShoes_type(), rp.getColor()).stream().map(iProductMapper::toDtoResponse).collect(Collectors.toList());
+        List<String> categories = rp.getShoes_type().stream().map(String::toUpperCase).toList();
+        List<String> colors = rp.getColor().stream().map(String::toUpperCase).toList();
+        Pageable pageable =  PageRequest.of(0, 10);
+        List<ProductResponse> productsRecommendationRp = productRepository.findAllByFilter(categories, colors, pageable).stream().map(iProductMapper::toDtoResponse).collect(Collectors.toList());
         //productRepository.findAllByFilter(rp.getShoes_type(), rp.getColor()).stream().map(iProductMapper::toDtoResponse).toList();
         rp.setProductResponses(productsRecommendationRp);
         return rp;
