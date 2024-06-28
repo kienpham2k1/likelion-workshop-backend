@@ -30,11 +30,12 @@ public class AIServiceImpl implements AIService {
     @Override
     public AIRecommendationResponse getRecommendation(AIRecommendationRequest request) {
         AIRecommendationResponse rp = (AIRecommendationResponse) apiCallerUtils.callApi(endpoint, HttpMethod.POST, request, AIRecommendationResponse.class);
-        List<String> categories = rp.getShoes_type().stream().map(String::toUpperCase).toList();
-        List<String> colors = rp.getColor().stream().map(String::toUpperCase).toList();
         Pageable pageable =  PageRequest.of(0, 10);
-        List<ProductResponse> productsRecommendationRp = productRepository.findAllByFilter(categories, colors, pageable).stream().map(iProductMapper::toDtoResponse).collect(Collectors.toList());
-        //productRepository.findAllByFilter(rp.getShoes_type(), rp.getColor()).stream().map(iProductMapper::toDtoResponse).toList();
+        List<ProductResponse> productsRecommendationRp = productRepository.findAllByFilter(rp.getShoes_type() == null ? null : rp.getShoes_type().stream().map(String::toUpperCase).toList()
+                        , rp.getColor()  == null ? null : rp.getColor().stream().map(String::toUpperCase).toList(), pageable)
+                .stream()
+                .map(iProductMapper::toDtoResponse)
+                .collect(Collectors.toList());
         rp.setProductResponses(productsRecommendationRp);
         return rp;
     }
