@@ -1,5 +1,6 @@
 package org.example.likelion.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -24,5 +25,6 @@ public class UserRegisterRequest {
     @NotNull
     @NotBlank
     private String addressLine;
+    @JsonIgnore
     private Role role = Role.USER;
 }

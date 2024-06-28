@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.example.likelion.dto.auth.Role;
 import org.example.likelion.dto.auth.UserDetailsImpl;
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
@@ -23,7 +24,8 @@ import java.util.Set;
 @Builder
 public class Admin extends UserDetailsImpl {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @UuidGenerator
     @Column(name = "admin_id")
     private String id;
     @Column(unique = true)
