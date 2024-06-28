@@ -3,6 +3,7 @@ package org.example.likelion.service.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.likelion.constant.ErrorMessage;
 import org.example.likelion.dto.auth.UserDetailsImpl;
 import org.example.likelion.dto.mapper.IUserMapper;
 import org.example.likelion.dto.request.LoginRequest;
@@ -47,7 +48,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public UserRegisterResponse register(UserRegisterRequest registerRequest) {
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            throw new DuplicateRecordException("Error: Username is already taken!");
+            throw new DuplicateRecordException(ErrorMessage.USERNAME_HAS_TAKEN);
         }
         User user = IUserMapper.INSTANCE.toEntity(registerRequest);
         User savedUser = userRepository.save(user);
