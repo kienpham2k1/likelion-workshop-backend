@@ -39,3 +39,6 @@ twilio:
   auth_token: ${TWILIO_AUTH_TOKEN}
   from_phone_number: ${TWILIO_FROM_PHONE_NUMBER}
   to_phone_number: +84978550951
+infobip:
+  api_key: ${INFOBIP_API_KEY}
+  url: ${INFOBIP_URL}
