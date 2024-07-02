@@ -5,6 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 @Component
@@ -25,7 +26,7 @@ public class OtpGeneratorUtils {
     }
 
     public Integer generateOTP(String key) {
-        Random random = new Random();
+        SecureRandom random = new SecureRandom();
         int OTP = 100000 + random.nextInt(900000);
         otpCache.put(key, OTP);
 
