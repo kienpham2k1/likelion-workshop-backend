@@ -1,11 +1,11 @@
 package org.example.likelion.service.sms;
 
 import lombok.RequiredArgsConstructor;
-import org.example.likelion.constant.InfoMessage;
 import org.example.likelion.dto.request.infobip.InfobipRequest;
 import org.example.likelion.dto.request.infobip.Message;
 import org.example.likelion.dto.request.infobip.Recipient;
 import org.example.likelion.utils.APICallerUtils;
+import org.example.likelion.utils.OtpGeneratorUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,6 +18,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class InfobipServiceImpl implements InfobipService {
     private final APICallerUtils apiCaller;
+    private final OtpGeneratorUtils otpGenerator;
     @Value("${infobip.url}")
     private String apiUrl;
     @Value("${infobip.api_key}")
@@ -25,7 +26,7 @@ public class InfobipServiceImpl implements InfobipService {
     private final String FROM = "ServiceSMS";
 
     @Override
-    public void sendSms(String toPhoneNumber) {
+    public void sendOtpCode(String toPhoneNumber, String message) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "App " + apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -37,7 +38,7 @@ public class InfobipServiceImpl implements InfobipService {
                                 .to(toPhoneNumber)
                                 .build()))
                         .from(FROM)
-                        .text(InfoMessage.OTP_MESSAGE)
+                        .text(message)
                         .build()))
                 .build();
         apiCaller.callApi(apiUrl, messages, headers, HttpMethod.POST, String.class);

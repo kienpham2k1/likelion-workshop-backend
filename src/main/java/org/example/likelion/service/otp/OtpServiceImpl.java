@@ -18,9 +18,8 @@ public class OtpServiceImpl implements OtpService {
             log.error("OTP generator is not working...");
             return false;
         }
-
         log.info("Generated OTP: {}", otpValue);
-        return false;
+        return true;
     }
 
     @Override

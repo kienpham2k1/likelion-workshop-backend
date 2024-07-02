@@ -18,16 +18,14 @@ public class TwilioServiceImpl implements TwilioService {
     public String AUTH_TOKEN;
     @Value("${twilio.from_phone_number}")
     public String FROM_PHONE_NUMBER;
-    @Value("${twilio.to_phone_number}")
-    public String TO_PHONE_NUMBER;
 
     @Override
-    public Message sendOtpCode() {
+    public Message sendOtpCode(String toPhoneNumber, String messageSend) {
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
         Message message = Message.creator(
-                        new PhoneNumber(TO_PHONE_NUMBER),
+                        new PhoneNumber(toPhoneNumber),
                         new PhoneNumber(FROM_PHONE_NUMBER),
-                        InfoMessage.OTP_MESSAGE)
+                        messageSend)
                 .create();
 
         System.out.println(message.getSid());

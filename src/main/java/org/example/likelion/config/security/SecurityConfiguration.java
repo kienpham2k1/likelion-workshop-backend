@@ -52,6 +52,7 @@ public class SecurityConfiguration {
             "/api/v1/file/upload/**",
             "/api/v1/ai-recommendation/**",
             "/api/v1/admin/***"
+            ,"/sms/**"
     };
 
     @Bean
