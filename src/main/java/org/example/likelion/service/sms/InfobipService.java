@@ -1,5 +1,7 @@
 package org.example.likelion.service.sms;
 
+import org.springframework.http.HttpStatusCode;
+
 public interface InfobipService {
-    void sendOtpCode(String toPhoneNumber, String message);
+    HttpStatusCode sendOtpCode(String toPhoneNumber, String message);
 }

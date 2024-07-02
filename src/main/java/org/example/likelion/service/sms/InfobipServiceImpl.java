@@ -9,6 +9,7 @@ import org.example.likelion.utils.OtpGeneratorUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class InfobipServiceImpl implements InfobipService {
     private final String FROM = "ServiceSMS";
 
     @Override
-    public void sendOtpCode(String toPhoneNumber, String message) {
+    public HttpStatusCode sendOtpCode(String toPhoneNumber, String message) {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "App " + apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -41,6 +42,6 @@ public class InfobipServiceImpl implements InfobipService {
                         .text(message)
                         .build()))
                 .build();
-        apiCaller.callApi(apiUrl, messages, headers, HttpMethod.POST, String.class);
+        return apiCaller.callApi(apiUrl, messages, headers, HttpMethod.POST, String.class).getStatusCode();
     }
 }
