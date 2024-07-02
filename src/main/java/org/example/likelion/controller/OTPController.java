@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.*;
 public class OTPController {
     private final OtpService otpService;
     private final JwtService jwtService;
+//    private final UserService userService;
 
     @Operation(summary = "Send OTP by SMS")
     @PostMapping("/sendSms")
     @ResponseStatus(HttpStatus.CREATED)
     public void sendSms(@RequestParam String phoneNumber, @RequestHeader(name = "Authorization") String token) {
         String name = jwtService.getUserNameFromHeaderBearerToken(token);
+
         otpService.sendOtpVisSms(name, "+84" + phoneNumber);
     }
 
