@@ -80,6 +80,17 @@
             <artifactId>aws-java-sdk-s3</artifactId>
             <version>1.12.540</version>
         </dependency>
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>10.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>32.0.0-jre</version>
+        </dependency>
+
     </dependencies>
 
     <build>

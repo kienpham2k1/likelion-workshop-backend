@@ -34,4 +34,11 @@ aws:
     bucket: ${S3_BUKET_NAME}
 ai:
   endpoint: https://correct-cortney-tzuy284-8410edb0.koyeb.app/recommendation
-  method: POST
+twilio:
+  account_sid: ${TWILIO_ACCOUNT_SID}
+  auth_token: ${TWILIO_AUTH_TOKEN}
+  from_phone_number: ${TWILIO_FROM_PHONE_NUMBER}
+  to_phone_number: +84978550951
+infobip:
+  api_key: ${INFOBIP_API_KEY}
+  url: ${INFOBIP_URL}
