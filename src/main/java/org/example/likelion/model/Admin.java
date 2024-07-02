@@ -25,7 +25,7 @@ import java.util.Set;
 public class Admin extends UserDetailsImpl {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @UuidGenerator
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
     @Column(name = "admin_id")
     private String id;
     @Column(unique = true)
