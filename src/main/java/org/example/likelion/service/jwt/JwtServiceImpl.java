@@ -116,4 +116,9 @@ public class JwtServiceImpl implements JwtService {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public String getUserNameFromHeaderBearerToken(String token) {
+        return getUserNameFromJwtToken(token.replace("Bearer ", ""));
+    }
+
 }

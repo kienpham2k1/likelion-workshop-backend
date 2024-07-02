@@ -1,8 +1,10 @@
 package org.example.likelion.service.otp;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.example.likelion.constant.InfoMessage;
+import org.example.likelion.service.mail.MailService;
 import org.example.likelion.service.sms.InfobipService;
 import org.example.likelion.utils.OtpGeneratorUtils;
 import org.springframework.http.HttpStatusCode;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class OtpServiceImpl implements OtpService {
     private final OtpGeneratorUtils otpGenerator;
     private final InfobipService infobipService;
+    private final MailService mailService;
 
     @Override
     public Boolean sendOtpVisSms(String userName, String phoneNumber) {
@@ -29,16 +32,19 @@ public class OtpServiceImpl implements OtpService {
         return rs;
     }
 
+    @SneakyThrows
     @Override
     public Boolean sendOtpVisEmail(String userName, String email) {
         boolean rs = false;
         Integer otpValue = otpGenerator.generateOTP(userName);
-        if (otpValue == -1) {
+        if (otpValue == -1 || otpValue == null) {
             log.error("OTP generator is not working...");
             return false;
+        } else {
+            log.info("Generated OTP: {}", otpValue);
+            mailService.sendOtpCode(email, otpValue.toString(), userName);
+            return rs;
         }
-        log.info("Generated OTP: {}", otpValue);
-        return rs;
     }
 
     @Override
