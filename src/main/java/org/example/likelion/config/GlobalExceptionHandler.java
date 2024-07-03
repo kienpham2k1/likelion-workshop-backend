@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -103,13 +104,13 @@ public class GlobalExceptionHandler {
                 .description(request.getDescription(false))
                 .timestamp(LocalDateTime.now())
                 .build();
-        log.warn("Duplicate record exception: %s".formatted(errorResponse));
+        log.error("Exception: %s, description: %s, message: %s".formatted(ex.getClass().getSimpleName(), errorResponse.getDescription(), ex.getMessage()));
         return errorResponse;
     }
 
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorResponseEntity auth(DuplicateRecordException ex, WebRequest request) {
+    public ErrorResponseEntity auth(BadCredentialsException ex, WebRequest request) {
         ErrorResponseEntity errorResponse = ErrorResponseEntity.builder()
                 .status(HttpStatus.UNAUTHORIZED)
                 .message(ex.getMessage())
@@ -145,11 +146,25 @@ public class GlobalExceptionHandler {
         log.error("Exception: %s, description: %s, message: %s".formatted(ex.getClass().getSimpleName(), errorResponse.getDescription(), ex.getMessage()));
         return errorResponse;
     }
+
     @ExceptionHandler(SQLException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponseEntity SQLException(SQLException ex, WebRequest request) {
         ErrorResponseEntity errorResponse = ErrorResponseEntity.builder()
                 .status(HttpStatus.CONFLICT)
+                .message(ex.getMessage())
+                .description(request.getDescription(false))
+                .timestamp(LocalDateTime.now())
+                .build();
+        log.error("Exception: %s, description: %s, message: %s".formatted(ex.getClass().getSimpleName(), errorResponse.getDescription(), ex.getMessage()));
+        return errorResponse;
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponseEntity UsernameNotFoundExceptionHandler(UsernameNotFoundException ex, WebRequest request) {
+        ErrorResponseEntity errorResponse = ErrorResponseEntity.builder()
+                .status(HttpStatus.UNAUTHORIZED)
                 .message(ex.getMessage())
                 .description(request.getDescription(false))
                 .timestamp(LocalDateTime.now())

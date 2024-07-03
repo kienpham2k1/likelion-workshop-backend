@@ -19,6 +19,8 @@ public interface JwtService {
 
     String getUserNameFromJwtToken(String token);
 
+    String getUserNameFromHeaderBearerToken(String token);
+
     boolean validateJwtToken(String authToken);
 
     boolean isTokenValid(String token, UserDetails userDetails);
