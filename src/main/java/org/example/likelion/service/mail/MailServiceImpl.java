@@ -32,7 +32,7 @@ public class MailServiceImpl implements MailService {
         Message msg = config.getJavaMailSender();
 
         //Config subject + date + destination
-        msg.setFrom(new InternetAddress(config.MAIL_ADDRRESS, false));
+        msg.setFrom(new InternetAddress(config.mailAddress, false));
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail, false));
         msg.setSubject(InfoMessage.OTP_MESSAGE + otp);
         msg.setSentDate(new Date());

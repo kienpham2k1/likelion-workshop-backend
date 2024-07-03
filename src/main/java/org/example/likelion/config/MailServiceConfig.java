@@ -15,9 +15,9 @@ import java.util.Properties;
 @Configuration
 public class MailServiceConfig {
     @Value("${mail.mail_address}")
-    public String MAIL_ADDRRESS;
+    public String mailAddress;
     @Value("${mail.mail_app_password}")
-    public String MAIL_APP_PASSWORD;
+    public String mailAppPassword;
 
     @Bean
     public Message getJavaMailSender() {
@@ -27,12 +27,15 @@ public class MailServiceConfig {
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
 
-        Session session = Session.getInstance(props, new Authenticator() {
+        Authenticator auth = new Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(MAIL_ADDRRESS, MAIL_APP_PASSWORD);
+                return new PasswordAuthentication(mailAddress, mailAppPassword);
             }
-        });
-        Message msg = new MimeMessage(session);
-        return msg;
+        };
+
+        Session session = Session.getInstance(props, auth);
+
+        return new MimeMessage(session);
     }
 }
