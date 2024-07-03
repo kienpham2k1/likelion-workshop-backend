@@ -1,7 +1,5 @@
 package org.example.likelion.dto.response;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Data
@@ -14,4 +12,6 @@ public class UserRegisterResponse {
     private String username;
     private String phoneNumber;
     private String addressLine;
+    private String email;
+    private Boolean verify;
 }

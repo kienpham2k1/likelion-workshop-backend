@@ -41,6 +41,10 @@ public class User extends UserDetailsImpl {
     @NotNull
     @NotBlank
     private String addressLine;
+    @NotBlank
+    private String email;
+    @NotNull
+    private Boolean verify;
     @Enumerated(EnumType.STRING)
     @NotNull
     private Role role;

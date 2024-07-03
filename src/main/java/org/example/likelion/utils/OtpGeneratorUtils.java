@@ -3,12 +3,14 @@ package org.example.likelion.utils;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
 @Component
+@RequiredArgsConstructor
 public class OtpGeneratorUtils {
     private static final Integer EXPIRE_MIN = 5;
     private final LoadingCache<String, Integer> otpCache;
@@ -16,7 +18,7 @@ public class OtpGeneratorUtils {
     public OtpGeneratorUtils() {
         super();
         otpCache = CacheBuilder.newBuilder()
-                .expireAfterWrite(EXPIRE_MIN, TimeUnit.SECONDS)
+                .expireAfterWrite(EXPIRE_MIN, TimeUnit.MINUTES)
                 .build(new CacheLoader<String, Integer>() {
                     @Override
                     public Integer load(String s) throws Exception {
@@ -29,7 +31,6 @@ public class OtpGeneratorUtils {
         SecureRandom random = new SecureRandom();
         int OTP = 100000 + random.nextInt(900000);
         otpCache.put(key, OTP);
-
         return OTP;
     }
 

@@ -12,4 +12,6 @@ public class UserResponse {
     private String username;
     private String phoneNumber;
     private String addressLine;
+    private String email;
+    private Boolean verify;
 }

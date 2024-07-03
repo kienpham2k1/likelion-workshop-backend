@@ -42,3 +42,6 @@ twilio:
 infobip:
   api_key: ${INFOBIP_API_KEY}
   url: ${INFOBIP_URL}
+mail:
+  mail_address: ${MAIL_ADDRESS}
+  mail_app_password: ${MAIL_APP_PW}
