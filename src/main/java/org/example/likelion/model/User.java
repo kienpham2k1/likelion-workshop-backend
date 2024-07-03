@@ -52,7 +52,10 @@ public class User extends UserDetailsImpl {
     private Set<Order> orders;
     @OneToMany(mappedBy = "user")
     private Set<Token> tokens;
-
+    @OneToMany(mappedBy = "user")
+    private Set<Members> members;
+    @OneToMany(mappedBy = "user")
+    private Set<Message> messages;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();
