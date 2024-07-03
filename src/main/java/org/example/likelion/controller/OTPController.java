@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class OTPController {
     private final OtpService otpService;
     private final JwtService jwtService;
-//    private final UserService userService;
 
     @Operation(summary = "Send OTP by SMS")
     @PostMapping("/sendSms")
