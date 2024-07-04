@@ -9,8 +9,6 @@ import java.awt.print.Pageable;
 import java.util.List;
 
 public interface PromotionService {
-
-
     List<Promotion> gets();
 
     Page<Promotion> gets(Pageable pageable);
