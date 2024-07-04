@@ -25,7 +25,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Page<Category> gets(String name, Pageable pageable) {
-        return categoryRepository.findByNameIsContainingIgnoreCase(name, pageable);
+//        return categoryRepository.findByNameIsContainingIgnoreCase(name, pageable);
+        return null;
     }
 
     @Override

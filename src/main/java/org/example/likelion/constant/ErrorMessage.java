@@ -13,4 +13,6 @@ public class ErrorMessage {
     public static final String OUT_OF_STOCK_VOUCHER = "This voucher is not available!";
     public static final String USERNAME_HAS_TAKEN = "Username is already taken!";
     public static final String ADMIN_USERNAME_HAS_TAKEN = "ADMIN username is already taken!";
+    public static final String PROMOTION_IS_NOT_FOUND = "Promotion not found!";
+    public static final String PROMOTION_EXPIRED = "Promotion is expired!";
 }
