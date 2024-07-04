@@ -43,7 +43,7 @@ public class AdminAuthenticationServiceImpl implements AdminAuthenticationServic
 
     @Override
     public AdminResponse create(AdminRequest rq) {
-        if (accountRepository.findUserDetailsByUsername(rq.getUsername()).isPresent()) {
+        if (accountRepository.findAccountByUsername(rq.getUsername()).isPresent()) {
             throw new DuplicateRecordException(ErrorMessage.USERNAME_HAS_TAKEN);
         }
         Admin admin = IAdminMapper.INSTANCE.toEntity(rq);

@@ -52,7 +52,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public UserRegisterResponse register(UserRegisterRequest registerRequest) {
-        if (accountRepository.findUserDetailsByUsername(registerRequest.getUsername()).isPresent()) {
+        if (accountRepository.findAccountByUsername(registerRequest.getUsername()).isPresent()) {
             throw new DuplicateRecordException(ErrorMessage.USERNAME_HAS_TAKEN);
         }
         User user = IUserMapper.INSTANCE.toEntity(registerRequest);
