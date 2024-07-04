@@ -5,12 +5,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.example.likelion.dto.mapper.IAdminMapper;
 import org.example.likelion.dto.request.AdminRequest;
 import org.example.likelion.dto.request.LoginRequest;
 import org.example.likelion.dto.response.AdminResponse;
 import org.example.likelion.dto.response.JwtResponse;
-import org.example.likelion.service.AdminService;
+import org.example.likelion.service.auth.AdminAuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin")
 public class AdminController {
-    private final AdminService adminService;
+    private final AdminAuthenticationService adminService;
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)

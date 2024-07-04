@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.likelion.constant.ErrorMessage;
+import org.example.likelion.dto.auth.Role;
 import org.example.likelion.dto.auth.UserDetailsImpl;
 import org.example.likelion.dto.mapper.IUserMapper;
 import org.example.likelion.dto.request.LoginRequest;
@@ -14,12 +15,14 @@ import org.example.likelion.enums.TokenType;
 import org.example.likelion.exception.DuplicateRecordException;
 import org.example.likelion.model.Token;
 import org.example.likelion.model.User;
+import org.example.likelion.repository.AccountRepository;
 import org.example.likelion.repository.TokenRepository;
 import org.example.likelion.repository.UserRepository;
 import org.example.likelion.service.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,11 +46,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     UserRepository userRepository;
     @Autowired
+    AccountRepository accountRepository;
+    @Autowired
     TokenRepository tokenRepository;
 
     @Override
     public UserRegisterResponse register(UserRegisterRequest registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+        if (accountRepository.findUserDetailsByUsername(registerRequest.getUsername()).isPresent()) {
             throw new DuplicateRecordException(ErrorMessage.USERNAME_HAS_TAKEN);
         }
         User user = IUserMapper.INSTANCE.toEntity(registerRequest);
@@ -66,7 +71,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
-
+        if (!user.getRole().equals(Role.USER)) throw new BadCredentialsException("Bad credentials");
         String accessToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);

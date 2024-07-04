@@ -1,10 +1,11 @@
-package org.example.likelion.service.implService;
+package org.example.likelion.service.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
+import org.example.likelion.dto.auth.Role;
 import org.example.likelion.dto.auth.UserDetailsImpl;
 import org.example.likelion.dto.mapper.IAdminMapper;
 import org.example.likelion.dto.request.AdminRequest;
@@ -15,12 +16,13 @@ import org.example.likelion.enums.TokenType;
 import org.example.likelion.exception.DuplicateRecordException;
 import org.example.likelion.model.Admin;
 import org.example.likelion.model.Token;
+import org.example.likelion.repository.AccountRepository;
 import org.example.likelion.repository.AdminRepository;
 import org.example.likelion.repository.TokenRepository;
-import org.example.likelion.service.AdminService;
 import org.example.likelion.service.jwt.JwtService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,17 +33,19 @@ import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
-public class AdminServiceImpl implements AdminService {
+public class AdminAuthenticationServiceImpl implements AdminAuthenticationService {
     private final JwtService jwtService;
     private final AdminRepository adminRepository;
     private final TokenRepository tokenRepository;
     private final PasswordEncoder encoder;
     private final AuthenticationManager authenticationManager;
+    private final AccountRepository accountRepository;
 
     @Override
     public AdminResponse create(AdminRequest rq) {
-        if (adminRepository.findByUsername(rq.getUsername()).isPresent())
-            throw new DuplicateRecordException(ErrorMessage.ADMIN_USERNAME_HAS_TAKEN);
+        if (accountRepository.findUserDetailsByUsername(rq.getUsername()).isPresent()) {
+            throw new DuplicateRecordException(ErrorMessage.USERNAME_HAS_TAKEN);
+        }
         Admin admin = IAdminMapper.INSTANCE.toEntity(rq);
         Admin saveAdmin = adminRepository.save(admin);
         admin.setPassword(encoder.encode(rq.getPassword()));
@@ -52,19 +56,22 @@ public class AdminServiceImpl implements AdminService {
         return IAdminMapper.INSTANCE.toDto(admin);
 
     }
+
     @Override
     public JwtResponse authenticate(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
-
+        if (!user.getRole().equals(Role.ADMIN)) throw new BadCredentialsException("Bad credentials");
         String accessToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken);
         return new JwtResponse(accessToken, refreshToken);
-    }  @Override
+    }
+
+    @Override
     public void refreshToken(HttpServletRequest request,
                              HttpServletResponse response) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -90,6 +97,7 @@ public class AdminServiceImpl implements AdminService {
             }
         }
     }
+
     public void saveUserToken(UserDetailsImpl userDetails, String jwtToken) {
         var token = Token.builder()
                 .admin(IAdminMapper.INSTANCE.toEntity(userDetails))
@@ -100,6 +108,7 @@ public class AdminServiceImpl implements AdminService {
                 .build();
         tokenRepository.save(token);
     }
+
     public void revokeAllUserTokens(UserDetailsImpl user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
