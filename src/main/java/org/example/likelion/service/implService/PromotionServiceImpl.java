@@ -60,4 +60,5 @@ public class PromotionServiceImpl implements PromotionService {
         pro.setActive(false);
         return promotionRepository.save(pro);
     }
+
 }
