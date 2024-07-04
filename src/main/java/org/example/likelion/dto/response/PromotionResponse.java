@@ -3,6 +3,7 @@ package org.example.likelion.dto.response;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -16,5 +17,5 @@ public class PromotionResponse {
     private LocalDate expiredDate;
     private LocalDate startedDate;
     private boolean active;
-    private String categoryId;
+    private Set<CategoryResponse> categories;
 }
