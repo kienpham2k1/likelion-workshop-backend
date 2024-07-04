@@ -71,7 +71,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
-        if (!user.getRole().equals(Role.USER)) throw new BadCredentialsException("Bad credentials");
         String accessToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
