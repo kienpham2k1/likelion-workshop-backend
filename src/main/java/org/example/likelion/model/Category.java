@@ -26,6 +26,6 @@ public class Category {
     private boolean isDeleted;
     @OneToMany(mappedBy = "category")
     private Set<Product> product;
-    @OneToMany(mappedBy = "category")
-    private Set<Promotion> promotions;
+    @ManyToMany(mappedBy = "categories")
+    Set<Promotion> promotions;
 }
