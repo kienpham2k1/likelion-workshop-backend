@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.likelion.constant.ErrorMessage;
 import org.example.likelion.dto.auth.Role;
 import org.example.likelion.dto.auth.UserDetailsImpl;
+import org.example.likelion.dto.mapper.IAdminMapper;
 import org.example.likelion.dto.mapper.IUserMapper;
 import org.example.likelion.dto.request.LoginRequest;
 import org.example.likelion.dto.request.UserRegisterRequest;
@@ -22,7 +23,6 @@ import org.example.likelion.service.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -80,13 +80,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void saveUserToken(UserDetailsImpl userDetails, String jwtToken) {
-        var token = Token.builder()
+        var token = userDetails.getRole() == Role.USER ? Token.builder()
                 .user(IUserMapper.INSTANCE.toEntity(userDetails))
                 .token(jwtToken)
                 .tokenType(TokenType.BEARER)
                 .expired(false)
                 .revoked(false)
+                .build() : Token.builder()
+                .admin(IAdminMapper.INSTANCE.toEntity(userDetails))
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
                 .build();
+        ;
         tokenRepository.save(token);
     }
 
