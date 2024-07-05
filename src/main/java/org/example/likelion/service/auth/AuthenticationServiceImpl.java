@@ -61,12 +61,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
+
         saveUserToken(savedUser, jwtToken);
-        return IUserMapper.INSTANCE.toDtoRegisterResponse(user);
+        UserRegisterResponse userResponse = new UserRegisterResponse();
+        userResponse.setUser(IUserMapper.INSTANCE.toDtoRegisterResponse(user));
+        userResponse.setToken(new JwtResponse(jwtToken, refreshToken));
+        return userResponse;
     }
 
     @Override
-    public JwtResponse authenticate(LoginRequest loginRequest) {
+    public UserRegisterResponse authenticate(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -75,7 +79,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken);
-        return new JwtResponse(accessToken, refreshToken);
+        Optional<User> userInfo = userRepository.findByUsername(loginRequest.getUsername());
+
+        UserRegisterResponse userResponse = new UserRegisterResponse();
+        userResponse.setUser(IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null)));
+        userResponse.setToken(new JwtResponse(accessToken, refreshToken));
+        return userResponse;
     }
 
     @Override
@@ -147,4 +156,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         return Optional.empty();
     }
+
 }

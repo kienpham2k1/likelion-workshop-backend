@@ -5,9 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.example.likelion.dto.auth.UserDetailsImpl;
 import org.example.likelion.dto.request.LoginRequest;
 import org.example.likelion.dto.request.UserRegisterRequest;
-import org.example.likelion.dto.response.JwtResponse;
 import org.example.likelion.dto.response.UserRegisterResponse;
-import org.example.likelion.model.User;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -15,9 +13,9 @@ import java.util.Optional;
 public interface AuthenticationService {
     UserRegisterResponse register(UserRegisterRequest userRegisterRequest);
 
-    JwtResponse authenticate(LoginRequest loginRequest);
+    UserRegisterResponse authenticate(LoginRequest loginRequest);
 
-    void saveUserToken(UserDetailsImpl userDetails, String jwtToken);
+    void saveUserToken(UserDetailsImpl userDetails, String jwtResponse);
 
     void revokeAllUserTokens(UserDetailsImpl user);
 
@@ -25,4 +23,5 @@ public interface AuthenticationService {
                       HttpServletResponse response) throws IOException;
 
     Optional<UserDetailsImpl> getCurrentUser();
+
 }

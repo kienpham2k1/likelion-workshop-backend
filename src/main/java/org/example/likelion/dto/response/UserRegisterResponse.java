@@ -9,9 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class UserRegisterResponse {
-    private String username;
-    private String phoneNumber;
-    private String addressLine;
-    private String email;
-    private Boolean verify;
+    private UserResponse user;
+    private JwtResponse token;
 }
