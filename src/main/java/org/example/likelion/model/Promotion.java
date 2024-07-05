@@ -1,12 +1,10 @@
 package org.example.likelion.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "promotion")
@@ -14,9 +12,11 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Promotion {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "promotion_id")
     private String id;
     @Column(nullable = false)
     private String name;
@@ -24,9 +24,14 @@ public class Promotion {
     private double discountPercent;
     @Column(name = "expired_date", nullable = false)
     private LocalDate expiredDate;
-    @Column(name = "create_date", nullable = false)
-    private LocalDate createDate;
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false, insertable = false, updatable = false)
-    private Category category;
+    @Column(name = "started_date", nullable = false)
+    private LocalDate startedDate;
+    @Column(name = "is_active", nullable = false)
+    private boolean active;
+    @ManyToMany
+    @JoinTable(
+            name = "pro_cate",
+            joinColumns = @JoinColumn(name = "promotion_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    Set<Category> categories;
 }

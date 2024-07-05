@@ -1,19 +1,20 @@
 package org.example.likelion.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
 @Entity
-@Table(name = "category")
+@Table(name = "category"
+        , uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name"})
+})
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -21,8 +22,10 @@ public class Category {
     private String id;
     @Column(nullable = false)
     private String name;
+    @Column(name = "is_deleted", columnDefinition = "boolean default false")
+    private boolean isDeleted;
     @OneToMany(mappedBy = "category")
     private Set<Product> product;
-    @OneToMany(mappedBy = "category")
-    private Set<Promotion> promotions;
+    @ManyToMany(mappedBy = "categories")
+    Set<Promotion> promotions;
 }

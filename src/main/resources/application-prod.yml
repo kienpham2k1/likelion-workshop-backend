@@ -1,0 +1,47 @@
+server:
+  port:
+    8080
+logging:
+  level:
+    org:
+      springframework: INFO
+spring:
+  datasource:
+    url: ${RDS_URL}
+    username: ${RDS_USERNAME}
+    password: ${RDS_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_nationalized_character_data: true
+    show-sql: true
+likelion:
+  app:
+    jwt:
+      jwtSecret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000
+      refresh-token:
+        expiration: 604800000
+aws:
+  accessKey: ${S3_ACCESS_KEY}
+  secretKey: ${S3_SECRET_KEY}
+  region: ${REGION}
+  s3:
+    bucket: ${S3_BUKET_NAME}
+ai:
+  endpoint: https://correct-cortney-tzuy284-8410edb0.koyeb.app/recommendation
+twilio:
+  account_sid: ${TWILIO_ACCOUNT_SID}
+  auth_token: ${TWILIO_AUTH_TOKEN}
+  from_phone_number: ${TWILIO_FROM_PHONE_NUMBER}
+  to_phone_number: +84978550951
+infobip:
+  api_key: ${INFOBIP_API_KEY}
+  url: ${INFOBIP_URL}
+mail:
+  mail_address: ${MAIL_ADDRESS}
+  mail_app_password: ${MAIL_APP_PW}

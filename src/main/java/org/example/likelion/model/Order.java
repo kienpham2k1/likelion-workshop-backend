@@ -1,26 +1,29 @@
 package org.example.likelion.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
+import lombok.*;
+import org.example.likelion.enums.OrderStatus;
 
 import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "[order]")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "order_id")
     private String id;
     @Column(nullable = false)
+    @Positive
+    @Min(1)
     private double total;
     @Column(name = "shipping_fee", nullable = false)
     private double shippingFee;
@@ -30,12 +33,20 @@ public class Order {
     private String addressLine;
     @Column(name = "create_date", nullable = false)
     private LocalDate createDate;
+    @Column(name = "order_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus = OrderStatus.RECEIVED;
+    private boolean isCancel;
     @OneToMany(mappedBy = "order")
     private Set<OrderDetail> orderDetails;
-    @OneToOne
-//    @JoinColumn(name = "order_id", referencedColumnName = "voucher_id")
-    @MapsId
-    @JoinColumn(name = "order_id")
+    @Column(name = "voucher_id", nullable = false)
+    private String voucherId;
+    @ManyToOne
+    @JoinColumn(name = "voucher_id", referencedColumnName = "voucher_id", insertable = false, updatable = false)
     private Voucher voucher;
-
+    @Column(name = "user_id", nullable = false)
+    private String userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
+    private User user;
 }
