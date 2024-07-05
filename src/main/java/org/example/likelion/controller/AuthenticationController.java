@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.example.likelion.dto.request.LoginRequest;
 import org.example.likelion.dto.request.UserRegisterRequest;
-import org.example.likelion.dto.response.JwtResponse;
 import org.example.likelion.dto.response.UserRegisterResponse;
 import org.example.likelion.repository.UserRepository;
 import org.example.likelion.service.auth.AuthenticationService;
@@ -21,11 +20,11 @@ import java.io.IOException;
 @RequestMapping("/api/v1/auth")
 @Tag(name = "Authenticate Resource")
 public class AuthenticationController {
-
     @Autowired
     private AuthenticationService authenticationService;
     @Autowired
     UserRepository userRepository;
+
 
     @Operation(summary = "Sign Up")
     @PostMapping("/signup")
@@ -37,7 +36,7 @@ public class AuthenticationController {
     @Operation(summary = "Sign In")
     @PostMapping("/signin")
     @ResponseStatus(HttpStatus.OK)
-    public JwtResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public UserRegisterResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
         return authenticationService.authenticate(loginRequest);
     }
 
@@ -48,4 +47,5 @@ public class AuthenticationController {
                              HttpServletResponse response) throws IOException {
         authenticationService.refreshToken(request, response);
     }
+
 }
