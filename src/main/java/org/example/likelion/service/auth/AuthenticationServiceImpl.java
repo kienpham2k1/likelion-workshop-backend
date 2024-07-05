@@ -12,6 +12,7 @@ import org.example.likelion.dto.request.LoginRequest;
 import org.example.likelion.dto.request.UserRegisterRequest;
 import org.example.likelion.dto.response.JwtResponse;
 import org.example.likelion.dto.response.UserRegisterResponse;
+import org.example.likelion.dto.response.UserResponse;
 import org.example.likelion.enums.TokenType;
 import org.example.likelion.exception.DuplicateRecordException;
 import org.example.likelion.model.Token;
@@ -102,7 +103,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .expired(false)
                 .revoked(false)
                 .build();
-        ;
         tokenRepository.save(token);
     }
 
@@ -152,6 +152,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             Object principal = authentication.getPrincipal();
             if (principal instanceof UserDetailsImpl userDetails) {
                 return Optional.of(userDetails);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<UserResponse> getCurrentUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetailsImpl userDetails) {
+                Optional<User> userInfo = userRepository.findByUsername(userDetails.getUsername());
+
+                UserResponse userResponse = IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null));
+                return Optional.of(userResponse);
             }
         }
         return Optional.empty();
