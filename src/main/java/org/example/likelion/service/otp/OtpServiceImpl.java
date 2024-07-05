@@ -4,11 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.example.likelion.constant.InfoMessage;
+import org.example.likelion.dto.mapper.IUserMapper;
+import org.example.likelion.dto.response.UserResponse;
+import org.example.likelion.model.User;
+import org.example.likelion.repository.UserRepository;
+import org.example.likelion.service.auth.AuthenticationService;
 import org.example.likelion.service.mail.MailService;
 import org.example.likelion.service.sms.InfobipService;
 import org.example.likelion.utils.OtpGeneratorUtils;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -17,41 +24,54 @@ public class OtpServiceImpl implements OtpService {
     private final OtpGeneratorUtils otpGenerator;
     private final InfobipService infobipService;
     private final MailService mailService;
+    private final UserRepository userRepository;
+    private final AuthenticationService authenticationService;
 
     @Override
-    public Boolean sendOtpVisSms(String userName, String phoneNumber) {
+    public Boolean sendOtpVisSms() {
+        UserResponse userDetails = authenticationService.getCurrentUserInfo().orElse(null);
+        Optional<User> userInfo = userRepository.findByUsername(userDetails.getUsername());
+
+        UserResponse userResponse = IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null));
         boolean rs;
-        Integer otpValue = otpGenerator.generateOTP(userName);
+        Integer otpValue = otpGenerator.generateOTP(userResponse.getUsername());
         if (otpValue == -1) {
-            log.error("OTP generator is not working...");
             return false;
         }
-        log.info("Generated OTP: {}", otpValue);
-        HttpStatusCode returnStatus = infobipService.sendOtpCode(phoneNumber, InfoMessage.OTP_MESSAGE + otpValue);
+        HttpStatusCode returnStatus = infobipService.sendOtpCode("+84" + userResponse.getPhoneNumber(), InfoMessage.OTP_MESSAGE + otpValue);
         rs = returnStatus.is2xxSuccessful();
         return rs;
+
     }
 
     @SneakyThrows
     @Override
-    public Boolean sendOtpVisEmail(String userName, String email) {
-        boolean rs = false;
-        Integer otpValue = otpGenerator.generateOTP(userName);
-        if (otpValue == -1 || otpValue == null) {
-            log.error("OTP generator is not working...");
+    public Boolean sendOtpVisEmail() {
+        UserResponse userDetails = authenticationService.getCurrentUserInfo().orElse(null);
+
+        Optional<User> userInfo = userRepository.findByUsername(userDetails.getUsername());
+
+        UserResponse userResponse = IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null));
+        boolean rs;
+        Integer otpValue = otpGenerator.generateOTP(userResponse.getUsername());
+        if (otpValue == -1) {
             return false;
-        } else {
-            log.info("Generated OTP: {}", otpValue);
-            mailService.sendOtpCode(email, otpValue.toString(), userName);
-            return rs;
         }
+        mailService.sendOtpCode(userResponse.getEmail(), otpValue.toString(), userResponse.getUsername());
+        return true;
+
     }
 
     @Override
-    public Boolean validateOTP(String key, Integer otpNumber) {
-        Integer cacheOTP = otpGenerator.getOPTByKey(key);
+    public Boolean validateOTP(Integer otpNumber) {
+        UserResponse userDetails = authenticationService.getCurrentUserInfo().orElse(null);
+
+        Integer cacheOTP = otpGenerator.getOPTByKey(userDetails.getUsername());
         if (cacheOTP != null && cacheOTP.equals(otpNumber)) {
-            otpGenerator.clearOTPFromCache(key);
+            otpGenerator.clearOTPFromCache(userDetails.getUsername());
+            User userInfo = userRepository.findUserByUsername(userDetails.getUsername());
+            userInfo.setVerify(true);
+            userRepository.save(userInfo);
             return true;
         }
         return false;
