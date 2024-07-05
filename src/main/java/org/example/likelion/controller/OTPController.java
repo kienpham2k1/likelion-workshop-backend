@@ -21,25 +21,21 @@ public class OTPController {
     @Operation(summary = "Send OTP by SMS")
     @PostMapping("/sendSms")
     @ResponseStatus(HttpStatus.CREATED)
-    public void sendSms(@RequestParam String phoneNumber, @RequestHeader(name = "Authorization") String token) {
-        String name = jwtService.getUserNameFromHeaderBearerToken(token);
-
-        otpService.sendOtpVisSms(name, "+84" + phoneNumber);
+    public void sendSms() {
+        otpService.sendOtpVisSms();
     }
 
     @Operation(summary = "Send OTP by Mail")
     @PostMapping("/sendEmail")
     @ResponseStatus(HttpStatus.CREATED)
-    public void sendMail(@RequestParam String email, @RequestHeader(name = "Authorization") String token) {
-        String name = jwtService.getUserNameFromHeaderBearerToken(token);
-        otpService.sendOtpVisEmail(name, email);
+    public void sendMail() {
+        otpService.sendOtpVisEmail();
     }
 
     @Operation(summary = "Verify OTP")
     @PostMapping("/verify")
-    public Boolean verify(@RequestParam Integer otp, @RequestHeader(name = "Authorization") String token) {
-        String name = jwtService.getUserNameFromHeaderBearerToken(token);
-        return otpService.validateOTP(name, otp);
+    public Boolean verify(@RequestParam Integer otp) {
+        return otpService.validateOTP(otp);
     }
 
 }
