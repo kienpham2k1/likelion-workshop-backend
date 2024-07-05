@@ -91,6 +91,10 @@ public class SecurityConfiguration {
                         .requestMatchers(GET, "/api/v1/category/**")
                         .permitAll()
                         .requestMatchers("/api/v1/voucher/**")
+                        .permitAll()
+                        .requestMatchers("/api/v1/otp/**")
+                        .permitAll()
+                        .requestMatchers("/api/v1/user/**")
                         .authenticated()
                         .requestMatchers(
                                 request -> {

@@ -1,6 +1,7 @@
 package org.example.likelion.dto.response;
 
 import lombok.*;
+import org.example.likelion.enums.OrderStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,5 +19,6 @@ public class OrderResponse {
     private String addressLine;
     private LocalDate createDate;
     List<OrderDetailResponse> orderDetails;
+    private OrderStatus orderStatus;
     private String voucherId;
 }

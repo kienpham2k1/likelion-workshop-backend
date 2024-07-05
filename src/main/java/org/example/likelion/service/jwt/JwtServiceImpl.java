@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import org.example.likelion.dto.auth.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +37,10 @@ public class JwtServiceImpl implements JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return buildToken(new HashMap<>(), userDetails, jwtExpiration);
+        Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof UserDetailsImpl)
+            claims.put("role", ((UserDetailsImpl) userDetails).getRole());
+        return buildToken(claims, userDetails, jwtExpiration);
     }
 
     public String generateToken(UserDetails userDetails, Map<String, Object> extraClaims) {
@@ -44,6 +48,9 @@ public class JwtServiceImpl implements JwtService {
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof UserDetailsImpl)
+            claims.put("role", ((UserDetailsImpl) userDetails).getRole());
         return buildToken(new HashMap<>(), userDetails, refreshExpiration);
     }
 

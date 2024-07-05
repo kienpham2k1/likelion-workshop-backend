@@ -8,10 +8,6 @@ import org.example.likelion.dto.mapper.ICategoryMapper;
 import org.example.likelion.dto.request.CategoryRequest;
 import org.example.likelion.dto.response.CategoryResponse;
 import org.example.likelion.service.CategoryService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,18 +25,6 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.OK)
     public List<CategoryResponse> getCategories() {
         return categoryService.gets().stream().map(ICategoryMapper.INSTANCE::toDtoResponse).toList();
-    }
-
-    @Operation(summary = "Get Category List by Name")
-    @GetMapping()
-    @ResponseStatus(HttpStatus.OK)
-    public Page<CategoryResponse> getCategories(@RequestParam(required = false) String name,
-                                                @RequestParam(defaultValue = "0") Integer pageNo,
-                                                @RequestParam(defaultValue = "10") Integer pageSize,
-                                                @RequestParam(defaultValue = "asc") String sortDirection,
-                                                @RequestParam(defaultValue = "id") String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
-        return categoryService.gets(name, pageable).map(ICategoryMapper.INSTANCE::toDtoResponse);
     }
 
     @Operation(summary = "Get Category by ID")

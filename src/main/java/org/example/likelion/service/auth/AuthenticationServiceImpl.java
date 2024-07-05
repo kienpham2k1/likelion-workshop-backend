@@ -4,16 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.likelion.constant.ErrorMessage;
+import org.example.likelion.dto.auth.Role;
 import org.example.likelion.dto.auth.UserDetailsImpl;
+import org.example.likelion.dto.mapper.IAdminMapper;
 import org.example.likelion.dto.mapper.IUserMapper;
 import org.example.likelion.dto.request.LoginRequest;
 import org.example.likelion.dto.request.UserRegisterRequest;
 import org.example.likelion.dto.response.JwtResponse;
 import org.example.likelion.dto.response.UserRegisterResponse;
+import org.example.likelion.dto.response.UserResponse;
 import org.example.likelion.enums.TokenType;
 import org.example.likelion.exception.DuplicateRecordException;
 import org.example.likelion.model.Token;
 import org.example.likelion.model.User;
+import org.example.likelion.repository.AccountRepository;
 import org.example.likelion.repository.TokenRepository;
 import org.example.likelion.repository.UserRepository;
 import org.example.likelion.service.jwt.JwtService;
@@ -43,11 +47,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     UserRepository userRepository;
     @Autowired
+    AccountRepository accountRepository;
+    @Autowired
     TokenRepository tokenRepository;
 
     @Override
     public UserRegisterResponse register(UserRegisterRequest registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+        if (accountRepository.findAccountByUsername(registerRequest.getUsername()).isPresent()) {
             throw new DuplicateRecordException(ErrorMessage.USERNAME_HAS_TAKEN);
         }
         User user = IUserMapper.INSTANCE.toEntity(registerRequest);
@@ -56,28 +62,42 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
+
         saveUserToken(savedUser, jwtToken);
-        return IUserMapper.INSTANCE.toDtoRegisterResponse(user);
+        UserRegisterResponse userResponse = new UserRegisterResponse();
+        userResponse.setUser(IUserMapper.INSTANCE.toDtoRegisterResponse(user));
+        userResponse.setToken(new JwtResponse(jwtToken, refreshToken));
+        return userResponse;
     }
 
     @Override
-    public JwtResponse authenticate(LoginRequest loginRequest) {
+    public UserRegisterResponse authenticate(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
-
         String accessToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken);
-        return new JwtResponse(accessToken, refreshToken);
+        Optional<User> userInfo = userRepository.findByUsername(loginRequest.getUsername());
+
+        UserRegisterResponse userResponse = new UserRegisterResponse();
+        userResponse.setUser(IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null)));
+        userResponse.setToken(new JwtResponse(accessToken, refreshToken));
+        return userResponse;
     }
 
     @Override
     public void saveUserToken(UserDetailsImpl userDetails, String jwtToken) {
-        var token = Token.builder()
+        var token = userDetails.getRole() == Role.USER ? Token.builder()
                 .user(IUserMapper.INSTANCE.toEntity(userDetails))
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build() : Token.builder()
+                .admin(IAdminMapper.INSTANCE.toEntity(userDetails))
                 .token(jwtToken)
                 .tokenType(TokenType.BEARER)
                 .expired(false)
@@ -136,4 +156,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         return Optional.empty();
     }
+
+    @Override
+    public Optional<UserResponse> getCurrentUserInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetailsImpl userDetails) {
+                Optional<User> userInfo = userRepository.findByUsername(userDetails.getUsername());
+
+                UserResponse userResponse = IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null));
+                return Optional.of(userResponse);
+            }
+        }
+        return Optional.empty();
+    }
+
 }

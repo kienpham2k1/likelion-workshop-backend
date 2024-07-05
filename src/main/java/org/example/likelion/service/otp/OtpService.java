@@ -1,10 +1,10 @@
 package org.example.likelion.service.otp;
 
 public interface OtpService {
-    Boolean sendOtpVisSms(String userName, String phoneNumber);
+    Boolean sendOtpVisSms();
 
-    Boolean sendOtpVisEmail(String userName, String email);
+    Boolean sendOtpVisEmail();
 
-    Boolean validateOTP(String key, Integer otpNumber);
+    Boolean validateOTP(Integer otpNumber);
 
 }
