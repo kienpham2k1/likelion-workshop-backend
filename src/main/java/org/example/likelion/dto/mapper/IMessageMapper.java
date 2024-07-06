@@ -13,10 +13,8 @@ public interface IMessageMapper {
 
     @Mapping(ignore = true, target = "attachment")
     Message toEntity(MessageRequest messageRequest);
-    @Mapping(ignore = true, target = "attachment")
-    MessageRequest toDto(Message message);
 
     Message toEntity(MessageResponse messageResponse);
 
-    MessageResponse toDto1(Message message);
+    MessageResponse toDtoResponse(Message message);
 }

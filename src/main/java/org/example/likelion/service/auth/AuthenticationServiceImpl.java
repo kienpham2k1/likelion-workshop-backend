@@ -172,4 +172,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return Optional.empty();
     }
 
+    @Override
+    public Optional<User> getCurrUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetailsImpl userDetails) {
+                return userRepository.findByUsername(userDetails.getUsername());
+            }
+        }
+        return Optional.empty();
+    }
+
 }

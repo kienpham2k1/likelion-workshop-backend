@@ -20,4 +20,26 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setApplicationDestinationPrefixes("/app");
         registry.enableSimpleBroker("/topic");
     }
+//    @Override
+//    public void configureClientInboundChannel(ChannelRegistration registration) {
+//        registration.interceptors(new ChannelInterceptor() {
+//            @Override
+//            public Message<?> preSend(Message<?> message, MessageChannel channel) {
+//                final StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
+//                assert accessor != null;
+//                accessor.setUser(null);
+//                if (accessor.getCommand() == StompCommand.SEND
+//                        || accessor.getCommand() == StompCommand.MESSAGE
+//                        || accessor.getCommand() == StompCommand.SUBSCRIBE) {
+//                    final String accessToken = accessor.getFirstNativeHeader(AUTHORIZATION_HEADER);
+//                    jwtService.extractUserId(accessToken);
+//                    if (accessToken != null) {
+//                        String userId = jwtService.extractUserId(accessToken);
+//                        accessor.setUser(() -> userId);
+//                    } else throw new VerificationException("Invalid token");
+//                }
+//                return message;
+//            }
+//        });
+//    }
 }

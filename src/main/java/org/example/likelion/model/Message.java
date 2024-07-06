@@ -18,8 +18,8 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "message_id")
     private String id;
-    @Column(name = "message_content")
-    private String messageContent;
+    @Column(name = "content")
+    private String content;
     private String attachment;
     private LocalDate createdDate;
     @Column(name = "user_id")

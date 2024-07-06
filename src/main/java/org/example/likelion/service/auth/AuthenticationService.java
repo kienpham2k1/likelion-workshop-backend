@@ -7,6 +7,7 @@ import org.example.likelion.dto.request.LoginRequest;
 import org.example.likelion.dto.request.UserRegisterRequest;
 import org.example.likelion.dto.response.UserRegisterResponse;
 import org.example.likelion.dto.response.UserResponse;
+import org.example.likelion.model.User;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -26,4 +27,5 @@ public interface AuthenticationService {
     Optional<UserDetailsImpl> getCurrentUser();
 
     Optional<UserResponse> getCurrentUserInfo();
+    Optional<User> getCurrUser();
 }

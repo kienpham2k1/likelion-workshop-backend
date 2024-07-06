@@ -27,14 +27,14 @@ import java.util.Set;
         name = "findAccountByUsername",
         query =
                 """
-                select user_id as id, username as username, password as password, "role" as role
-                from (
-                    select u.user_id, u.username, u."password", u."role" from "user" u
-                    union all
-                    select a.admin_id, a.username, a."password", a."role" from "admin" a
-                ) as UserDetails
-                    where username = :username
-                """,
+                        select user_id as id, username as username, password as password, "role" as role
+                        from (
+                            select u.user_id, u.username, u."password", u."role" from "user" u
+                            union all
+                            select a.admin_id, a.username, a."password", a."role" from "admin" a
+                        ) as UserDetails
+                            where username = :username
+                        """,
         resultSetMapping = "account"
 )
 @SqlResultSetMapping(
@@ -80,10 +80,10 @@ public class User extends UserDetailsImpl {
     private Set<Order> orders;
     @OneToMany(mappedBy = "user")
     private Set<Token> tokens;
-    @OneToMany(mappedBy = "user")
-    private Set<Members> members;
-    @OneToMany(mappedBy = "user")
-    private Set<Message> messages;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private RoomChat roomChat;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return role.getAuthorities();

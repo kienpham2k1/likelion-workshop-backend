@@ -16,12 +16,14 @@ import java.util.Set;
 public class RoomChat {
     @Id
     @Column(name = "room_id")
-    @GeneratedValue(strategy = GenerationType.UUID)
+//    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    @Column(name = "created_date", nullable = false)
-    private LocalDate createdDate;
+    @Column(name = "created_date")
+    private LocalDate createdDate = LocalDate.now();
     @OneToMany(mappedBy = "room")
     private Set<Message> messages;
-    @OneToMany(mappedBy = "room")
-    private Set<Members> members;
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "room_id")
+    private User user;
 }
