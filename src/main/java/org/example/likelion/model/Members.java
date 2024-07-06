@@ -17,7 +17,7 @@ public class Members {
     private String id;
     @ManyToOne
     @JoinColumn(name = "room_id")
-    private Room room;
+    private RoomChat room;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

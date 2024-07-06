@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Room {
+public class RoomChat {
     @Id
     @Column(name = "room_id")
     @GeneratedValue(strategy = GenerationType.UUID)

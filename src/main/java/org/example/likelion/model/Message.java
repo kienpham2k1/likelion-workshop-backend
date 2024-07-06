@@ -31,5 +31,5 @@ public class Message {
     private String roomId;
     @ManyToOne
     @JoinColumn(name = "room_id", referencedColumnName = "room_id", insertable = false, updatable = false)
-    private Room room;
+    private RoomChat room;
 }
