@@ -32,8 +32,12 @@ import io.swagger.v3.oas.annotations.servers.Server;
                         url = "http://localhost:8080"
                 ),
                 @Server(
-                        description = "PROD ENV",
+                        description = "DEV ENV",
                         url = "http://likelion-eshop.ap-northeast-3.elasticbeanstalk.com"
+                ),
+                @Server(
+                        description = "PRO ENV",
+                        url = "https://https://tzuy284.id.vn"
                 )
         },
         security = {
