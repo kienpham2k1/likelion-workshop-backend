@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/otp")
+@RequestMapping("/api/v1/otp")
 @Slf4j
 @Tag(name = "OTP Verification Service")
 public class OTPController {
