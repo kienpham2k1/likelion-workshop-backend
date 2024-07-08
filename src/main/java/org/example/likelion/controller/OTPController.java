@@ -32,7 +32,7 @@ public class OTPController {
 
     @Operation(summary = "Verify OTP")
     @PostMapping("/verify")
-    public Boolean verify(@RequestParam Integer otp) {
+    public Boolean verify(@RequestBody Integer otp) {
         return otpService.validateOTP(otp);
     }
 
