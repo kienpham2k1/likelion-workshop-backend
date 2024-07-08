@@ -52,6 +52,7 @@ public class SecurityConfiguration {
             "/api/v1/file/upload/**",
             "/api/v1/ai-recommendation/**",
             "/api/v1/admin/**",
+
     };
 
     @Bean
@@ -96,7 +97,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/user/**")
                         .authenticated()
                         .requestMatchers("/ws/**")
-                        .authenticated()
+                        .permitAll()
                         .requestMatchers(
                                 request -> {
                                     return request.getMethod().equals(GET.toString()) ||
@@ -139,7 +140,10 @@ public class SecurityConfiguration {
 
                         .anyRequest()
                         .authenticated())
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
+                .exceptionHandling(ex -> {
+                    ex.authenticationEntryPoint(unauthorizedHandler);
+                    ex.accessDeniedHandler((request, response, authException) -> response.sendError(403, "Forbidden"));
+                })
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
