@@ -48,4 +48,10 @@ public class AuthenticationController {
         authenticationService.refreshToken(request, response);
     }
 
+    @Operation(summary = "Logout")
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.OK)
+    public void logout(@RequestParam String userName) {
+        authenticationService.logout(userName);
+    }
 }

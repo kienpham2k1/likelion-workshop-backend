@@ -32,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
                 .allowedOrigins("*")
-                .allowCredentials(true);
+        ;
     }
 
     @Override
