@@ -13,6 +13,6 @@ public class MessageRequest {
     private String content;
     private MultipartFile attachment;
     @JsonIgnore
-    private LocalDate createdDate = LocalDate.now();
+    private LocalDate createdDate;
 
 }

@@ -13,5 +13,7 @@ public class MessageResponse {
     private String attachment;
     private LocalDate createdDate;
     private String userId;
+    private UserResponse user;
     private String roomId;
+    private RoomResponse room;
 }
