@@ -85,6 +85,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         UserRegisterResponse userResponse = new UserRegisterResponse();
         userResponse.setUser(IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null)));
         userResponse.setToken(new JwtResponse(accessToken, refreshToken));
+
         return userResponse;
     }
 
