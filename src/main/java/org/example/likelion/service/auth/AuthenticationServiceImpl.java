@@ -15,7 +15,6 @@ import org.example.likelion.dto.response.UserRegisterResponse;
 import org.example.likelion.dto.response.UserResponse;
 import org.example.likelion.enums.TokenType;
 import org.example.likelion.exception.DuplicateRecordException;
-import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.Token;
 import org.example.likelion.model.User;
 import org.example.likelion.repository.AccountRepository;
@@ -86,10 +85,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         UserRegisterResponse userResponse = new UserRegisterResponse();
         userResponse.setUser(IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null)));
         userResponse.setToken(new JwtResponse(accessToken, refreshToken));
-        if (!userResponse.getUser().getVerify())
-            throw new EntityNotFoundException(ErrorMessage.USER_NOT_VERIFIED);
-        else
-            return userResponse;
+        return userResponse;
     }
 
     @Override
