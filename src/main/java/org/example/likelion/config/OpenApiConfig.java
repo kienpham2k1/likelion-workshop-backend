@@ -37,7 +37,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 ),
                 @Server(
                         description = "PRO ENV",
-                        url = "https://https://tzuy284.id.vn"
+                        url = "https://tzuy284.id.vn"
                 )
         },
         security = {
