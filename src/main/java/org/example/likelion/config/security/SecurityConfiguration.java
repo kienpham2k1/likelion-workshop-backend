@@ -84,68 +84,36 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(req -> req.requestMatchers(WHITE_LIST_URL)
-                        .permitAll()
-                        .requestMatchers(GET, "/api/v1/product/**")
-                        .permitAll()
-                        .requestMatchers(GET, "/api/v1/category/**")
-                        .permitAll()
-                        .requestMatchers("/api/v1/voucher/**")
-                        .permitAll()
-                        .requestMatchers("/api/v1/otp/**")
-                        .permitAll()
-                        .requestMatchers("/api/v1/user/**")
-                        .authenticated()
-                        .requestMatchers("/ws/**")
-                        .permitAll()
-                        .requestMatchers(
-                                request -> {
-                                    return request.getMethod().equals(GET.toString()) ||
-                                            request.getMethod().equals(PUT.toString()) ||
-                                            request.getMethod().equals(PUT.toString()) ||
-                                            request.getMethod().equals(DELETE.toString());
-                                },
-                                new AntPathRequestMatcher("/api/v1/order-detail/**"))
-                        .authenticated()
-                        .requestMatchers(
-                                request -> {
-                                    return request.getMethod().equals(GET.toString()) ||
-                                            request.getMethod().equals(POST.toString()) ||
-                                            request.getMethod().equals(PUT.toString()) ||
-                                            request.getMethod().equals(DELETE.toString());
-                                },
-                                new AntPathRequestMatcher("/api/v1/order/**"))
-                        .hasAnyRole(USER.name(), ADMIN.name()) .requestMatchers(
-                                request -> {
-                                    return request.getMethod().equals(GET.toString()) ||
-                                            request.getMethod().equals(POST.toString()) ||
-                                            request.getMethod().equals(PUT.toString()) ||
-                                            request.getMethod().equals(DELETE.toString());
-                                },
-                                new AntPathRequestMatcher("/api/v1/roomChat/**"))
-                        .hasAnyRole(USER.name(), ADMIN.name())
-//                        .requestMatchers(
-//                                new AntPathRequestMatcher("/api/v1/product/**", HttpMethod.POST.toString()),
-//                                new AntPathRequestMatcher("/api/v1/product/**", HttpMethod.PUT.toString()),
-//                                new AntPathRequestMatcher("/api/v1/product/**", HttpMethod.DELETE.toString())
-//                        ).hasRole(ADMIN.name())
-                        .requestMatchers(
-                                request -> {
-                                    return request.getMethod().equals(HttpMethod.POST.toString()) ||
-                                            request.getMethod().equals(HttpMethod.PUT.toString()) ||
-                                            request.getMethod().equals(HttpMethod.DELETE.toString());
-                                },
-                                new AntPathRequestMatcher("/api/v1/product/**"))
-                        .hasRole(ADMIN.name())
-                        .requestMatchers(
-                                request -> {
-                                    return request.getMethod().equals(HttpMethod.POST.toString()) ||
-                                            request.getMethod().equals(HttpMethod.PUT.toString()) ||
-                                            request.getMethod().equals(HttpMethod.DELETE.toString());
-                                },
-                                new AntPathRequestMatcher("/api/v1/category/**"))
-                        .hasRole(ADMIN.name())
+                .authorizeHttpRequests(req -> req.requestMatchers(WHITE_LIST_URL).permitAll()
+                        // product
+                        .requestMatchers(GET, "/api/v1/product/**").permitAll()
+                        .requestMatchers(POST, "/api/v1/product/**").hasRole(ADMIN.name())
+                        .requestMatchers(PUT, "/api/v1/product/**").hasRole(ADMIN.name())
+                        .requestMatchers(DELETE, "/api/v1/product/**").hasRole(ADMIN.name())
+                        //category
+                        .requestMatchers(GET, "/api/v1/category/**").permitAll()
+                        .requestMatchers(POST, "/api/v1/category/**").hasRole(ADMIN.name())
+                        .requestMatchers(PUT, "/api/v1/category/**").hasRole(ADMIN.name())
+                        .requestMatchers(DELETE, "/api/v1/category/**").hasRole(ADMIN.name())
 
+                        .requestMatchers("/api/v1/voucher/**").permitAll()
+                        .requestMatchers("/api/v1/otp/**").permitAll()
+                        .requestMatchers("/api/v1/user/**").authenticated()
+                        .requestMatchers("/ws/**").permitAll()
+                        //order
+                        .requestMatchers( "/api/v1/order/**").authenticated()
+                        //order detail
+                        .requestMatchers( "/api/v1/order-detail/**").authenticated()
+                        //rom chat - admin
+                        .requestMatchers(GET, "/api/v1/roomChat/admin/**").hasRole(ADMIN.name())
+                        .requestMatchers(POST, "/api/v1/roomChat/admin/**").hasRole(ADMIN.name())
+                        .requestMatchers(PUT, "/api/v1/roomChat/admin/**").hasRole(ADMIN.name())
+                        .requestMatchers(DELETE, "/api/v1/roomChat/admin/**").hasRole(ADMIN.name())
+                        // room chat - user
+                        .requestMatchers(GET, "/api/v1/roomChat/user/**").hasRole(USER.name())
+                        .requestMatchers(POST, "/api/v1/roomChat/user/**").hasRole(USER.name())
+                        .requestMatchers(PUT, "/api/v1/roomChat/user/**").hasRole(USER.name())
+                        .requestMatchers(DELETE, "/api/v1/roomChat/user/**").hasRole(USER.name())
                         .anyRequest()
                         .authenticated())
                 .exceptionHandling(ex -> {

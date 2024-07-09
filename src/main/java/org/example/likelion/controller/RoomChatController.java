@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class RoomChatController {
     private final RoomChatService roomChatService;
 
-    @GetMapping("/gets")
+    @GetMapping("/admin/gets")
     @ResponseStatus(HttpStatus.OK)
     public Page<RoomChatResponse> getMessageByRoomId(@RequestParam(defaultValue = "0") Integer pageNo,
                                                      @RequestParam(defaultValue = "50") Integer pageSize,
@@ -28,11 +28,11 @@ public class RoomChatController {
         return roomChatService.gets(pageable).map(IRoomChatMapper.INSTANCE::toDtoResponse);
     }
 
-    @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createRoomChat(@RequestBody RoomChatRequest roomChatRequest) {
-        roomChatService.create(IRoomChatMapper.INSTANCE.toEntity(roomChatRequest));
-    }
+//    @PostMapping("/create")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public void createRoomChat(@RequestBody RoomChatRequest roomChatRequest) {
+//        roomChatService.create(IRoomChatMapper.INSTANCE.toEntity(roomChatRequest));
+//    }
 
     @GetMapping("/user/getRoomChat")
     @ResponseStatus(HttpStatus.CREATED)
