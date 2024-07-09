@@ -32,7 +32,7 @@ public class OtpServiceImpl implements OtpService {
         UserResponse userDetails = authenticationService.getCurrentUserInfo().orElse(null);
         Optional<User> userInfo = userRepository.findByUsername(userDetails.getUsername());
 
-        UserResponse userResponse = IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null));
+        UserResponse userResponse = IUserMapper.INSTANCE.toDtoResponse(userInfo.orElse(null));
         boolean rs;
         Integer otpValue = otpGenerator.generateOTP(userResponse.getUsername());
         if (otpValue == -1) {
@@ -51,7 +51,7 @@ public class OtpServiceImpl implements OtpService {
 
         Optional<User> userInfo = userRepository.findByUsername(userDetails.getUsername());
 
-        UserResponse userResponse = IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null));
+        UserResponse userResponse = IUserMapper.INSTANCE.toDtoResponse(userInfo.orElse(null));
         boolean rs;
         Integer otpValue = otpGenerator.generateOTP(userResponse.getUsername());
         if (otpValue == -1) {
