@@ -1,6 +1,7 @@
 package org.example.likelion.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.likelion.dto.auth.Role;
 import org.example.likelion.dto.auth.UserDetailsImpl;
 import org.example.likelion.dto.mapper.IMessageMapper;
 import org.example.likelion.dto.request.MessageRequest;
@@ -33,7 +34,9 @@ public class ChatController {
         AbstractAuthenticationToken authenticationToken = (AbstractAuthenticationToken) headerAccessor.getUser();
         UserDetailsImpl userDetails = (UserDetailsImpl) Objects.requireNonNull(authenticationToken).getPrincipal();
         Message e = IMessageMapper.INSTANCE.toEntity(message);
-        e.setUserId(userDetails.getId());
+       if(userDetails.getRole() == Role.USER) {
+            e.setUserId(userDetails.getId());
+        }
         var msi = messageService.create(roomId, e);
         MessageResponse rp = IMessageMapper.INSTANCE.toDtoResponse(messageService.get(msi.getId()));
         messagingTemplate.convertAndSend("/topic/" + roomId, rp);
