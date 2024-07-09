@@ -115,6 +115,14 @@ public class SecurityConfiguration {
                                             request.getMethod().equals(DELETE.toString());
                                 },
                                 new AntPathRequestMatcher("/api/v1/order/**"))
+                        .hasAnyRole(USER.name(), ADMIN.name()) .requestMatchers(
+                                request -> {
+                                    return request.getMethod().equals(GET.toString()) ||
+                                            request.getMethod().equals(POST.toString()) ||
+                                            request.getMethod().equals(PUT.toString()) ||
+                                            request.getMethod().equals(DELETE.toString());
+                                },
+                                new AntPathRequestMatcher("/api/v1/roomChat/**"))
                         .hasAnyRole(USER.name(), ADMIN.name())
 //                        .requestMatchers(
 //                                new AntPathRequestMatcher("/api/v1/product/**", HttpMethod.POST.toString()),

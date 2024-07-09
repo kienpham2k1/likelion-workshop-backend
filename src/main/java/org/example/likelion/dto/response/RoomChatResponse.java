@@ -10,8 +10,6 @@ import java.util.Set;
 @Builder
 public class RoomChatResponse {
     private String id;
-
     private LocalDate createdDate;
-
-    private Set<MessageResponse> messages;
+    private UserResponse user;
 }

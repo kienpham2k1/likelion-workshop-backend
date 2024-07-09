@@ -30,6 +30,6 @@ public class Message {
     @Column(name = "room_id")
     private String roomId;
     @ManyToOne
-    @JoinColumn(name = "room_id", referencedColumnName = "room_id", insertable = false, updatable = false)
+    @JoinColumn(name = "room_id", referencedColumnName = "user_id", insertable = false, updatable = false)
     private RoomChat room;
 }

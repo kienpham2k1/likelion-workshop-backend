@@ -45,12 +45,17 @@ public class RoomChatServiceImpl implements RoomChatService {
     }
 
     public RoomChat createRoomChat() {
-        User user = authenticationService.getCurrUser().orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
-        RoomChat roomChat = RoomChat
-                .builder()
-                .id(user.getId())
-                .createdDate(LocalDate.now())
-                .build();
+        User user = authenticationService.getCurrUser().orElseThrow(
+                () -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
+        RoomChat roomChat = new RoomChat();
+             roomChat.setId(user.getId());
+             roomChat.setCreatedDate(LocalDate.now());
+             roomChat.setUser(user);
+//                .id(user.getId())
+//                .createdDate(LocalDate.now())
+//                .user(userRepository.findById(user.getId()).orElseThrow(
+//                        ()-> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND)))
+//                .build();
         return roomChatRepository.save(roomChat);
     }
 }

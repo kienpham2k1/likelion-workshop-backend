@@ -15,8 +15,7 @@ import java.util.Set;
 @Builder
 public class RoomChat {
     @Id
-    @Column(name = "room_id")
-//    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "user_id")
     private String id;
     @Column(name = "created_date")
     private LocalDate createdDate = LocalDate.now();
@@ -24,6 +23,6 @@ public class RoomChat {
     private Set<Message> messages;
     @OneToOne
     @MapsId
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "user_id")
     private User user;
 }

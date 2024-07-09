@@ -28,10 +28,4 @@ public class MessageController {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
         return messageService.gets(roomChatId, pageable).map(IMessageMapper.INSTANCE::toDtoResponse);
     }
-
-    @PostMapping("/create/{roomdId}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void createMessage(@PathVariable String roomdId, @RequestBody MessageRequest messageRequest) {
-        messageService.create(roomdId, IMessageMapper.INSTANCE.toEntity(messageRequest));
-    }
 }
