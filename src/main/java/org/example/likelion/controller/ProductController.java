@@ -29,6 +29,13 @@ public class ProductController {
     private final ProductService productService;
 
     @Operation(summary = "Get Product By Name")
+    @GetMapping("/getAll")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductResponse> getAllProducts() {
+        return productService.gets().stream().map(IProductMapper.INSTANCE::toDtoResponse).toList();
+    }
+
+    @Operation(summary = "Get Product By Name")
     @GetMapping("/getList")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getProducts(@RequestParam String productName) {
@@ -67,7 +74,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Update Product")
-    @PutMapping(value =  "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable String id, @RequestPart(name = "product") @Valid ProductRequest request, @RequestPart(name = "img") MultipartFile img) {
         productService.update(id, request, img);
