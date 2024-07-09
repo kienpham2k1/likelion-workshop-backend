@@ -13,9 +13,12 @@ import org.example.likelion.config.MailServiceConfig;
 import org.example.likelion.constant.InfoMessage;
 import org.example.likelion.utils.APICallerUtils;
 import org.example.likelion.utils.HtmlProcesserUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -43,8 +46,8 @@ public class MailServiceImpl implements MailService {
         String formattedDate = currentDate.format(formatter);
 
         //Config custom html file
-        String htmlFilePath = "src/main/resources/static/emailOTP.html"; // Update the path to your emailOTP.html file
-        String htmlTemplate = HtmlProcesserUtils.readHtmlTemplate(htmlFilePath);
+        ClassPathResource resource = new ClassPathResource("static/emailOTP.html");
+        String htmlTemplate = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
         String htmlContent = HtmlProcesserUtils.replacePlaceholders(htmlTemplate, userName, formattedDate, otp);
 
         // Config content of mail

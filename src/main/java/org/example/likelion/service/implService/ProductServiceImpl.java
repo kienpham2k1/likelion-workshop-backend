@@ -27,6 +27,11 @@ public class ProductServiceImpl implements ProductService {
     private final FileService fileService;
 
     @Override
+    public List<Product> gets() {
+        return productRepository.findAll();
+    }
+
+    @Override
     public List<Product> gets(String productName) {
         return productRepository.findAllByName(productName);
     }

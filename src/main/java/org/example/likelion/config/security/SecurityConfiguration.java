@@ -38,7 +38,8 @@ public class SecurityConfiguration {
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/**",
+    private static final String[] WHITE_LIST_URL = {
+            "/api/v1/auth/**",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",

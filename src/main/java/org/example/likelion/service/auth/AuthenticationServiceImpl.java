@@ -193,4 +193,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return Optional.empty();
     }
 
+    @Override
+    public void logout(String userName) {
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(userName);
+        if (validUserTokens.isEmpty())
+            return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true);
+            token.setRevoked(true);
+        });
+        tokenRepository.saveAll(validUserTokens);
+    }
 }
