@@ -93,6 +93,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }else if(user.getRole() == Role.ADMIN) {
             Admin adminInfo = adminRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
             userResponse.setUser(IUserMapper.INSTANCE.toDtoResponse(adminInfo));
+            userResponse.getUser().setVerify(true);
         }
         userResponse.setToken(new JwtResponse(accessToken, refreshToken));
         return userResponse;
