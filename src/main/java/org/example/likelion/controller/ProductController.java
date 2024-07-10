@@ -40,13 +40,6 @@ public class ProductController {
     }
 
     @Operation(summary = "Get Product By Name")
-    @GetMapping("/getAll")
-    @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> getAllProducts() {
-        return productService.gets().stream().map(IProductMapper.INSTANCE::toDtoResponse).toList();
-    }
-
-    @Operation(summary = "Get Product By Name")
     @GetMapping("/getList")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductResponse> getProducts(@RequestParam String productName) {
