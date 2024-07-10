@@ -16,6 +16,7 @@ import org.example.likelion.dto.response.UserRegisterResponse;
 import org.example.likelion.dto.response.UserResponse;
 import org.example.likelion.enums.TokenType;
 import org.example.likelion.exception.DuplicateRecordException;
+import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.Admin;
 import org.example.likelion.model.Token;
 import org.example.likelion.model.User;
@@ -140,7 +141,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         username = jwtService.getUserNameFromJwtToken(refreshToken);
         if (username != null) {
             var user = this.userRepository.findByUsername(username)
-                    .orElseThrow();
+                    .orElseThrow(()-> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
