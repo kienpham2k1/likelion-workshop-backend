@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.*;
 
 @Configuration
@@ -79,7 +80,7 @@ public class PaymentConfig {
     }
 
     public static String getRandomNumber(int len) {
-        Random rnd = new Random();
+        SecureRandom rnd = new SecureRandom();
         String chars = "0123456789";
         StringBuilder sb = new StringBuilder(len);
         for (int i = 0; i < len; i++) {
