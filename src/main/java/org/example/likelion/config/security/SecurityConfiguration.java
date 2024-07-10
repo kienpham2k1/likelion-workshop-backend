@@ -52,7 +52,8 @@ public class SecurityConfiguration {
             "/swagger-ui.html",
             "/api/v1/file/upload/**",
             "/api/v1/ai-recommendation/**",
-            "/api/v1/admin/**"
+            "/api/v1/admin/**",
+            "/api/v1/payment/vnpay-payment"
     };
 
     @Bean
@@ -95,6 +96,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/v1/otp/**")
                         .permitAll()
                         .requestMatchers("/api/v1/user/**")
+                        .authenticated()
+                        .requestMatchers("/api/v1/payment/submitOrder")
                         .authenticated()
                         .requestMatchers(
                                 request -> {
