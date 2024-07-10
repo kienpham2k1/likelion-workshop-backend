@@ -27,8 +27,8 @@ public class ProductServiceImpl implements ProductService {
     private final FileService fileService;
 
     @Override
-    public List<Product> gets() {
-        return productRepository.findAll();
+    public Page<Product> gets(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> updateProductPrice(String name, UpdatePriceProductRequest request) {
-        List<Product> products = gets(name);
+        List<Product> products = productRepository.findAllByName(name);
 
         for (Product product : products) {
             product.setPrice(request.getPrice());

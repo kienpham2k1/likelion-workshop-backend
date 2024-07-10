@@ -28,11 +28,15 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
-    @Operation(summary = "Get Product By Name")
+    @Operation(summary = "Get Products paging")
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductResponse> getAllProducts() {
-        return productService.gets().stream().map(IProductMapper.INSTANCE::toDtoResponse).toList();
+    public Page<ProductResponse> getAllProducts(@RequestParam(defaultValue = "0") Integer pageNo,
+                                                @RequestParam(defaultValue = "10") Integer pageSize,
+                                                @RequestParam(defaultValue = "asc") String sortDirection,
+                                                @RequestParam(defaultValue = "price") String sortBy) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
+        return productService.gets(pageable).map(IProductMapper.INSTANCE::toDtoResponse);
     }
 
     @Operation(summary = "Get Product By Name")
@@ -95,7 +99,7 @@ public class ProductController {
     }
 
     @Operation(summary = "update Product Price")
-    @PutMapping("/updateProductPrice/{id}")
+    @PutMapping("/updateProductPrice/{name}")
     @ResponseStatus(HttpStatus.OK)
     public void updateProductPrice(@PathVariable String name, @RequestBody @Valid UpdatePriceProductRequest request) {
         productService.updateProductPrice(name, request);
