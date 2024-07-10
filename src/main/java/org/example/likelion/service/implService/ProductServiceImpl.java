@@ -27,8 +27,8 @@ public class ProductServiceImpl implements ProductService {
     private final FileService fileService;
 
     @Override
-    public List<Product> gets() {
-        return productRepository.findAll();
+    public Page<Product> gets(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     @Override

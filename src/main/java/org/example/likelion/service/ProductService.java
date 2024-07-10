@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface ProductService {
-    List<Product> gets();
+    Page<Product> gets(Pageable pageable);
 
     List<Product> gets(String productName);
 

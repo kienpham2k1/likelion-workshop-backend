@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.example.likelion.dto.request.LoginRequest;
 import org.example.likelion.dto.request.UserRegisterRequest;
+import org.example.likelion.dto.response.UserLoginResponse;
 import org.example.likelion.dto.response.UserRegisterResponse;
 import org.example.likelion.repository.UserRepository;
 import org.example.likelion.service.auth.AuthenticationService;
@@ -36,7 +37,7 @@ public class AuthenticationController {
     @Operation(summary = "Sign In")
     @PostMapping("/signin")
     @ResponseStatus(HttpStatus.OK)
-    public UserRegisterResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public UserLoginResponse authenticateUser(@RequestBody LoginRequest loginRequest) {
         return authenticationService.authenticate(loginRequest);
     }
 

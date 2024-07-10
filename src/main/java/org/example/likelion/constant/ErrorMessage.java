@@ -15,5 +15,6 @@ public class ErrorMessage {
     public static final String ADMIN_USERNAME_HAS_TAKEN = "ADMIN username is already taken!";
     public static final String PROMOTION_IS_NOT_FOUND = "Promotion not found!";
     public static final String PROMOTION_EXPIRED = "Promotion is expired!";
+    public static final String MESSAGE_NOT_FOUND = "Message not found!";
     public static final String USER_NOT_VERIFIED = "User is not verified!";
 }

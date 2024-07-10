@@ -97,8 +97,6 @@ public class SecurityConfiguration {
                         .permitAll()
                         .requestMatchers("/api/v1/user/**")
                         .authenticated()
-                        .requestMatchers("/api/v1/payment/submitOrder")
-                        .authenticated()
                         .requestMatchers(
                                 request -> {
                                     return request.getMethod().equals(GET.toString()) ||

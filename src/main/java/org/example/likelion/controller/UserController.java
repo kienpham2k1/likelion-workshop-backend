@@ -2,6 +2,8 @@ package org.example.likelion.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.example.likelion.dto.auth.UserDetailsImpl;
+import org.example.likelion.dto.response.UserLoginResponse;
 import org.example.likelion.dto.response.UserResponse;
 import org.example.likelion.repository.UserRepository;
 import org.example.likelion.service.auth.AuthenticationService;
@@ -20,13 +22,14 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     private AuthenticationService authenticationService;
-    @Autowired
-    UserRepository userRepository;
 
     @Operation(summary = "Get User")
     @GetMapping("/getUser")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<UserResponse> getUser() {
-        return authenticationService.getCurrentUserInfo();
+    public Optional<UserDetailsImpl> getUser() {
+
+        Optional<UserDetailsImpl> userI = authenticationService.getCurrentUser();
+
+        return userI;
     }
 }
