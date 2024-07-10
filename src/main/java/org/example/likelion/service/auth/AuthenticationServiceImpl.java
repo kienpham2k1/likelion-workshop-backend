@@ -11,13 +11,17 @@ import org.example.likelion.dto.mapper.IUserMapper;
 import org.example.likelion.dto.request.LoginRequest;
 import org.example.likelion.dto.request.UserRegisterRequest;
 import org.example.likelion.dto.response.JwtResponse;
+import org.example.likelion.dto.response.UserLoginResponse;
 import org.example.likelion.dto.response.UserRegisterResponse;
 import org.example.likelion.dto.response.UserResponse;
 import org.example.likelion.enums.TokenType;
 import org.example.likelion.exception.DuplicateRecordException;
+import org.example.likelion.exception.EntityNotFoundException;
+import org.example.likelion.model.Admin;
 import org.example.likelion.model.Token;
 import org.example.likelion.model.User;
 import org.example.likelion.repository.AccountRepository;
+import org.example.likelion.repository.AdminRepository;
 import org.example.likelion.repository.TokenRepository;
 import org.example.likelion.repository.UserRepository;
 import org.example.likelion.service.jwt.JwtService;
@@ -50,6 +54,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     AccountRepository accountRepository;
     @Autowired
     TokenRepository tokenRepository;
+    @Autowired
+    private AdminRepository adminRepository;
 
     @Override
     public UserRegisterResponse register(UserRegisterRequest registerRequest) {
@@ -65,13 +71,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         saveUserToken(savedUser, jwtToken);
         UserRegisterResponse userResponse = new UserRegisterResponse();
-        userResponse.setUser(IUserMapper.INSTANCE.toDtoRegisterResponse(user));
+        userResponse.setUser(IUserMapper.INSTANCE.toDtoResponse(user));
         userResponse.setToken(new JwtResponse(jwtToken, refreshToken));
         return userResponse;
     }
 
     @Override
-    public UserRegisterResponse authenticate(LoginRequest loginRequest) {
+    public UserLoginResponse authenticate(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -80,12 +86,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken);
-        Optional<User> userInfo = userRepository.findByUsername(loginRequest.getUsername());
-
-        UserRegisterResponse userResponse = new UserRegisterResponse();
-        userResponse.setUser(IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null)));
+        UserLoginResponse userResponse = new UserLoginResponse();
+        if(user.getRole() == Role.USER) {
+            User userInfo = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
+            userResponse.setUser(IUserMapper.INSTANCE.toDtoResponse(userInfo));
+        }else if(user.getRole() == Role.ADMIN) {
+            Admin adminInfo = adminRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
+            userResponse.setUser(IUserMapper.INSTANCE.toDtoResponse(adminInfo));
+        }
         userResponse.setToken(new JwtResponse(accessToken, refreshToken));
-
         return userResponse;
     }
 
@@ -132,7 +141,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         username = jwtService.getUserNameFromJwtToken(refreshToken);
         if (username != null) {
             var user = this.userRepository.findByUsername(username)
-                    .orElseThrow();
+                    .orElseThrow(()-> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
@@ -166,8 +175,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             if (principal instanceof UserDetailsImpl userDetails) {
                 Optional<User> userInfo = userRepository.findByUsername(userDetails.getUsername());
 
-                UserResponse userResponse = IUserMapper.INSTANCE.toDtoRegisterResponse(userInfo.orElse(null));
+                UserResponse userResponse = IUserMapper.INSTANCE.toDtoResponse(userInfo.orElse(null));
                 return Optional.of(userResponse);
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> getCurrUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetailsImpl userDetails) {
+                return userRepository.findByUsername(userDetails.getUsername());
             }
         }
         return Optional.empty();
