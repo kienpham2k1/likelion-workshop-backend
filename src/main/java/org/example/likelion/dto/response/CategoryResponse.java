@@ -2,6 +2,8 @@ package org.example.likelion.dto.response;
 
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -10,5 +12,5 @@ import lombok.*;
 public class CategoryResponse {
     private String id;
     private String name;
-    private PromotionResponse promotion;
+    private Set<PromotionResponse> promotions;
 }
