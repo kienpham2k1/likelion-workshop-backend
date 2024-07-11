@@ -1,6 +1,7 @@
 package org.example.likelion.dto.response;
 
 import lombok.*;
+import org.example.likelion.dto.auth.Role;
 
 @Data
 @Getter
@@ -15,4 +16,5 @@ public class UserResponse {
     private String addressLine;
     private String email;
     private Boolean verify;
+    private Role role;
 }
