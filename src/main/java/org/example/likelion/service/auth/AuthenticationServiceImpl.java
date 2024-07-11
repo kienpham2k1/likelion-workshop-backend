@@ -87,10 +87,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken);
         UserLoginResponse userResponse = new UserLoginResponse();
-        if(user.getRole() == Role.USER) {
+        if (user.getRole() == Role.USER) {
             User userInfo = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
             userResponse.setUser(IUserMapper.INSTANCE.toDtoResponse(userInfo));
-        }else if(user.getRole() == Role.ADMIN) {
+        } else if (user.getRole() == Role.ADMIN) {
             Admin adminInfo = adminRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
             userResponse.setUser(IUserMapper.INSTANCE.toDtoResponse(adminInfo));
             userResponse.getUser().setVerify(true);
@@ -142,7 +142,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         username = jwtService.getUserNameFromJwtToken(refreshToken);
         if (username != null) {
             var user = this.userRepository.findByUsername(username)
-                    .orElseThrow(()-> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
+                    .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);
                 revokeAllUserTokens(user);
@@ -174,12 +174,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (authentication != null && authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
             if (principal instanceof UserDetailsImpl userDetails) {
-                Optional<User> userInfo = userRepository.findByUsername(userDetails.getUsername());
-
-                UserResponse userResponse = IUserMapper.INSTANCE.toDtoResponse(userInfo.orElse(null));
+                UserResponse userResponse = new UserResponse();
+                if (userDetails.getRole() == Role.USER) {
+                    User userInfo = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+                    userResponse = IUserMapper.INSTANCE.toDtoResponse(userInfo);
+                } else {
+                    Admin adminInfo = adminRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+                    userResponse = IUserMapper.INSTANCE.toDtoResponse(adminInfo);
+                }
                 return Optional.of(userResponse);
             }
         }
+        
         return Optional.empty();
     }
 
