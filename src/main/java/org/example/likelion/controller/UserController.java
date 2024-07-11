@@ -2,10 +2,7 @@ package org.example.likelion.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.example.likelion.dto.auth.UserDetailsImpl;
-import org.example.likelion.dto.response.UserLoginResponse;
 import org.example.likelion.dto.response.UserResponse;
-import org.example.likelion.repository.UserRepository;
 import org.example.likelion.service.auth.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,10 +23,8 @@ public class UserController {
     @Operation(summary = "Get User")
     @GetMapping("/getUser")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<UserDetailsImpl> getUser() {
-
-        Optional<UserDetailsImpl> userI = authenticationService.getCurrentUser();
-
-        return userI;
+    public Optional<UserResponse> getUser() {
+        Optional<UserResponse> userInfo = authenticationService.getCurrentUserInfo();
+        return userInfo;
     }
 }
