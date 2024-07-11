@@ -2,8 +2,6 @@ package org.example.likelion.dto.response;
 
 import lombok.*;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @AllArgsConstructor
