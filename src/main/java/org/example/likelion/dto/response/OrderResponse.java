@@ -22,4 +22,7 @@ public class OrderResponse {
     private UserResponse user;
     private OrderStatus orderStatus;
     private String voucherId;
+    private boolean cancel;
+    private boolean paid;
+    private boolean onlinePayment;
 }

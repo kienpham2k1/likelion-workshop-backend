@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class CategoryResponse {
-     private String id;
-     private String name;
+    private String id;
+    private String name;
+    private PromotionResponse promotion;
 }
