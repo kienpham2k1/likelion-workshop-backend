@@ -45,6 +45,10 @@ infobip:
 mail:
   mail_address: ${MAIL_ADDRESS}
   mail_app_password: ${MAIL_APP_PW}
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
+    endpoint: ${GEMINI_API_ENDPOINT}
 vnpay:
   vnp_PayUrl: ${VNPAY_PAY_URL}
   vnp_ApiUrl: ${VNPAY_API_URL}
