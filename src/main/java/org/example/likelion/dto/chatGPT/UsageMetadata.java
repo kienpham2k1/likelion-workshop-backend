@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UsageMetadata {
-    public int promptTokenCount;
-    public int candidatesTokenCount;
-    public int totalTokenCount;
+    private int promptTokenCount;
+    private int candidatesTokenCount;
+    private int totalTokenCount;
 }

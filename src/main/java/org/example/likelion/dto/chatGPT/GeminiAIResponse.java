@@ -10,6 +10,6 @@ import org.example.likelion.dto.chatGPT.UsageMetadata;
 import java.util.List;
 @Data
 public class GeminiAIResponse {
-    public List<Candidate> candidates;
-    public UsageMetadata usageMetadata;
+    private List<Candidate> candidates;
+    private UsageMetadata usageMetadata;
 }

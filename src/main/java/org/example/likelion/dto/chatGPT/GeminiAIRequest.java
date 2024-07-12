@@ -1,10 +1,8 @@
 package org.example.likelion.dto.chatGPT;
 
 import lombok.*;
-import org.example.likelion.dto.chatGPT.Content;
 
 import java.util.List;
-import java.util.Stack;
 
 @Builder
 @Getter
@@ -12,5 +10,5 @@ import java.util.Stack;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GeminiAIRequest {
-    List<Content> contents;
+    private List<Content> contents;
 }
