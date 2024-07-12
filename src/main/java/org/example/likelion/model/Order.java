@@ -44,7 +44,7 @@ public class Order {
     private boolean paid;
     @OneToMany(mappedBy = "order")
     private Set<OrderDetail> orderDetails;
-    @Column(name = "voucher_id", nullable = false)
+    @Column(name = "voucher_id", nullable = true)
     private String voucherId;
     @ManyToOne
     @JoinColumn(name = "voucher_id", referencedColumnName = "voucher_id", insertable = false, updatable = false)
