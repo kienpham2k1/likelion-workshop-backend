@@ -20,9 +20,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -71,7 +69,7 @@ public class AIServiceImpl implements AIService {
     }
 
     @Override
-    public GeminiAIResponse getRecommendation(GeminiAIRequest geminiAIRequest, MultipartFile img) {
+    public GeminiAIResponse getRecommendation(GeminiAIRequest geminiAIRequest) {
         if (geminiAIRequest.getContents().size() <= 1) {
             List<String> categories = productRepository.findProductCategories();
             List<String> colors = productRepository.findProductColors();
@@ -114,8 +112,6 @@ public class AIServiceImpl implements AIService {
             e.printStackTrace();
         }
         contentRs.getParts().get(0).setText(jsonString);
-        if (img != null)
-            contentRs.getParts().get(0).setInlineData(new InlineData(img.getContentType(), img));
         rs.getCandidates().get(0).setContent(contentRs);
         return rs;
     }

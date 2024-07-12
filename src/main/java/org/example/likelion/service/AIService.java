@@ -10,6 +10,6 @@ import java.io.File;
 
 public interface AIService {
     AIRecommendationResponse getRecommendation(AIRecommendationRequest request);
-    GeminiAIResponse getRecommendation(GeminiAIRequest geminiAIRequest, MultipartFile img);
+    GeminiAIResponse getRecommendation(GeminiAIRequest geminiAIRequest);
 
 }

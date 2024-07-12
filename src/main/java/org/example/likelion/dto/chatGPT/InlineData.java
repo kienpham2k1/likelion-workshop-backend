@@ -17,6 +17,5 @@ import java.io.File;
 public class InlineData {
     @JsonProperty("mime_type")
     private String mimeType;
-
-    private MultipartFile data;
+    private String data;
 }
