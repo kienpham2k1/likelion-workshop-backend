@@ -60,10 +60,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order create(Order order) {
-        var voucher = voucherRepository.findVoucherByIdAndActiveIsTrueAndQuantityGreaterThan(order.getVoucherId());
-        if (voucher == null) {
-            throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_VOUCHER);
-        }
         UserDetailsImpl userDetails = authenticationService.getCurrentUser().orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
         order.setCreateDate(LocalDate.now());
         order.getOrderDetails().forEach(e -> {
@@ -71,7 +67,15 @@ public class OrderServiceImpl implements OrderService {
                 throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_PRODUCT);
         });
         order.setUserId(userDetails.getId());
-        voucherService.reduce(order.getVoucherId());
+
+        if (order.getVoucherId() != null) {
+            var voucher = voucherRepository.findVoucherByIdAndActiveIsTrueAndQuantityGreaterThan(order.getVoucherId());
+            if (voucher == null) {
+                throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_VOUCHER);
+            }
+            voucherService.reduce(order.getVoucherId());
+        }
+        
         Order o = orderRepository.save(order);
         order.getOrderDetails().forEach(e -> {
             e.setOrderId(o.getId());

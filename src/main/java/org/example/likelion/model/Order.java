@@ -47,7 +47,7 @@ public class Order {
     @Column(name = "voucher_id", nullable = true)
     private String voucherId;
     @ManyToOne
-    @JoinColumn(name = "voucher_id", referencedColumnName = "voucher_id", insertable = false, updatable = false)
+    @JoinColumn(name = "voucher_id", referencedColumnName = "voucher_id", insertable = false, updatable = false, nullable = true)
     private Voucher voucher;
     @Column(name = "user_id", nullable = false)
     private String userId;
