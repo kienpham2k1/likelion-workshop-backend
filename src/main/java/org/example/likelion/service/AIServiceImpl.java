@@ -2,6 +2,10 @@ package org.example.likelion.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.chatGPT.*;
 import org.example.likelion.dto.mapper.IProductMapper;
@@ -88,7 +92,12 @@ public class AIServiceImpl implements AIService {
                 .replace("\\", "");
 
         Pageable pageable = PageRequest.of(0, 10);
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = JsonMapper.builder()
+                .addModule(new ParameterNamesModule())
+                .addModule(new Jdk8Module())
+                .addModule(new JavaTimeModule())
+                .build();
+
         JsonRecommendReturnType recommendation = null;
         try {
             recommendation = objectMapper.readValue(afterReplace, JsonRecommendReturnType.class);
