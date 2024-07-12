@@ -1,5 +1,6 @@
 package org.example.likelion.service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.likelion.enums.OrderStatus;
 import org.example.likelion.model.Order;
 import org.springframework.data.domain.Page;
@@ -20,5 +21,9 @@ public interface OrderService {
 
     Order updateStatus(String id, OrderStatus status);
 
+    Order updatePayment(String id);
+
     void cancel(String id);
+
+    void exportMonthlyReport(HttpServletResponse response);
 }

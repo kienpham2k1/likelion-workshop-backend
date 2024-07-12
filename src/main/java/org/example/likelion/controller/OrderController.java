@@ -10,23 +10,14 @@ import org.example.likelion.dto.request.OrderRequest;
 import org.example.likelion.dto.response.OrderResponse;
 import org.example.likelion.enums.OrderStatus;
 import org.example.likelion.model.Order;
-import org.example.likelion.service.OrderDetailService;
 import org.example.likelion.service.OrderService;
-import org.example.likelion.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.supercsv.io.CsvBeanWriter;
-import org.supercsv.io.ICsvBeanWriter;
-import org.supercsv.prefs.CsvPreference;
 
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -35,8 +26,6 @@ import java.util.List;
 @Tag(name = "Order Resource")
 public class OrderController {
     private final OrderService orderService;
-    private final OrderDetailService orderDetailService;
-    private final ProductService productService;
 
     @Operation(summary = "Get Order List")
     @GetMapping("/getList")
@@ -69,18 +58,18 @@ public class OrderController {
         return orderService.create(IOrderMapper.INSTANCE.toEntity(request));
     }
 
-//    @Operation(summary = "Update Order")
-//    @PutMapping("/update/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void update(@PathVariable String id, @RequestBody @Valid OrderRequest request) {
-//        orderService.update(id, IOrderMapper.INSTANCE.toEntity(request));
-//    }
-
     @Operation(summary = "Update Order")
     @PutMapping("/update-status/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void updateStatus(@PathVariable String id, @RequestBody @Valid OrderStatus status) {
         orderService.updateStatus(id, status);
+    }
+
+    @Operation(summary = "Update Payment")
+    @PutMapping("/update-payment/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePayment(@PathVariable String id) {
+        orderService.updatePayment(id);
     }
 
     @Operation(summary = "Cancel Order")
@@ -94,30 +83,6 @@ public class OrderController {
     @GetMapping("/export-report")
     @ResponseStatus(HttpStatus.OK)
     public void exportMonthlyReport(HttpServletResponse response) {
-        response.setContentType("text/csv");
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        String currentDateTime = dateFormatter.format(new Date());
-
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=order_completed_" + currentDateTime + ".csv";
-        response.setHeader(headerKey, headerValue);
-
-        List<Order> orderList = orderService.gets();
-        try {
-            ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
-            String[] csvHeader = {"Order ID", "User ID", "Total cost", "Phone Number", "Address", "Create Date", "Status", "Is Cancel", "Is Online Payment", "Is Paid"};
-            String[] nameMapping = {"id", "userId", "total", "phoneNumber", "addressLine", "createDate", "orderStatus", "cancel", "cancel", "paid",};
-            csvWriter.writeHeader(csvHeader);
-
-            for (Order order : orderList) {
-                csvWriter.write(order, nameMapping);
-            }
-
-            csvWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-
+        orderService.exportMonthlyReport(response);
     }
 }
