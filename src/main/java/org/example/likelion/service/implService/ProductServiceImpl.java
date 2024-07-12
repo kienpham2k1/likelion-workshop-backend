@@ -103,7 +103,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> updateProductPrice(String name, UpdatePriceProductRequest request) {
-        List<Product> products = productRepository.findAllByName(name);
+        List<Product> products = gets(name);
 
         for (Product product : products) {
             product.setPrice(request.getPrice());

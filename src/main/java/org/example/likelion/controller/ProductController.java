@@ -104,4 +104,5 @@ public class ProductController {
     public void updateProductPrice(@PathVariable String name, @RequestBody @Valid UpdatePriceProductRequest request) {
         productService.updateProductPrice(name, request);
     }
+
 }

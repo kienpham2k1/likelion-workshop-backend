@@ -21,5 +21,8 @@ public class OrderResponse {
     List<OrderDetailResponse> orderDetails;
     private UserResponse user;
     private OrderStatus orderStatus;
-    private String voucherId;
+    private VoucherResponse voucher;
+    private boolean cancel;
+    private boolean paid;
+    private boolean onlinePayment;
 }

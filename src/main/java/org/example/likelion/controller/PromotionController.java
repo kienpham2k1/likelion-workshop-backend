@@ -26,7 +26,6 @@ public class PromotionController {
     @Operation(summary = "Get Available Promotion")
     @GetMapping(value = "/get")
     public ResponseEntity<List<Promotion>> getAvailablePromotion() {
-
         return null;
     }
 
@@ -39,13 +38,8 @@ public class PromotionController {
     @Operation(summary = "Get Promotion By Id")
     @GetMapping(value = "/get/{id}")
     public ResponseEntity<PromotionResponse> getPromotionById(@PathVariable String id) {
-        return ResponseEntity.status(HttpStatus.OK).body(IPromotionMapper.INSTANCE.toDtoResponse(promotionService.get(id)));
-    }
-
-    @Operation(summary = "Get Promotion By Category Id")
-    @GetMapping(value = "/getFromCate")
-    public ResponseEntity<List<Promotion>> getPromotionByCateId(@RequestParam String categoryId) {
-        return null;
+        Promotion promotion = promotionService.get(id);
+        return ResponseEntity.status(HttpStatus.OK).body(IPromotionMapper.INSTANCE.toDtoResponse(promotion));
     }
 
     @Operation(summary = "Update Status Promotion ")

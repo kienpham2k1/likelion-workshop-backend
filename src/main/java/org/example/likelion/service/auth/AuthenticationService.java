@@ -28,6 +28,7 @@ public interface AuthenticationService {
     Optional<UserDetailsImpl> getCurrentUser();
 
     Optional<UserResponse> getCurrentUserInfo();
+
     Optional<User> getCurrUser();
 
     void logout(String userName);
