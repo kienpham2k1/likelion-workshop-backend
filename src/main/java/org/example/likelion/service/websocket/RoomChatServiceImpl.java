@@ -3,6 +3,8 @@ package org.example.likelion.service.websocket;
 
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
+import org.example.likelion.dto.auth.Role;
+import org.example.likelion.dto.auth.UserDetailsImpl;
 import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.RoomChat;
 import org.example.likelion.model.User;
@@ -25,7 +27,9 @@ public class RoomChatServiceImpl implements RoomChatService {
 
     @Override
     public Page<RoomChat> gets(Pageable pageable) {
-        return roomChatRepository.findAll(pageable);
+        UserDetailsImpl userDetails = authenticationService.getCurrentUser().get();
+        if (userDetails.getRole().equals(Role.ADMIN)) return roomChatRepository.findAll(pageable);
+        else return roomChatRepository.findRoomChatByUserId(userDetails.getId(), pageable);
     }
 
     @Override
