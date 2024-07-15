@@ -1,8 +1,12 @@
 package org.example.likelion.dto.chatGPT;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UsageMetadata {
     private int promptTokenCount;
     private int candidatesTokenCount;

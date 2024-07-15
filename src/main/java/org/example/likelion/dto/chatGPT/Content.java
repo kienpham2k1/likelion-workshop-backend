@@ -7,6 +7,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Content {
     private Role role;
     private List<Part> parts;

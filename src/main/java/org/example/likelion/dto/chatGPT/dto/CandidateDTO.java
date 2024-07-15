@@ -1,6 +1,8 @@
-package org.example.likelion.dto.chatGPT;
+package org.example.likelion.dto.chatGPT.dto;
 
 import lombok.*;
+import org.example.likelion.dto.chatGPT.Content;
+import org.example.likelion.dto.chatGPT.SafetyRating;
 
 import java.util.List;
 
@@ -9,8 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Candidate {
-    private Content content;
+public class CandidateDTO {
+    private ContentDTO content;
     private String finishReason;
     private int index;
     private List<SafetyRating> safetyRatings;

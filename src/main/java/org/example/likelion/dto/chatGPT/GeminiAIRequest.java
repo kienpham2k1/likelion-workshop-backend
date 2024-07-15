@@ -4,11 +4,11 @@ import lombok.*;
 
 import java.util.List;
 
-@Builder
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class GeminiAIRequest {
     private List<Content> contents;
 }

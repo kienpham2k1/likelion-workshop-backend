@@ -1,8 +1,12 @@
 package org.example.likelion.dto.chatGPT;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class SafetyRating {
     private String category;
     private String probability;

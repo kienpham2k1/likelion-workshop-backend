@@ -1,10 +1,7 @@
 package org.example.likelion.dto.chatGPT;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.example.likelion.dto.response.ProductResponse;
 
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class JsonRecommendReturnType {
     @JsonProperty("colors")
     private List<String> colors;
