@@ -8,6 +8,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.chatGPT.*;
+import org.example.likelion.dto.chatGPT.dto.GeminiAIResponseDTO;
+import org.example.likelion.dto.mapper.IGeminiAIMapper;
 import org.example.likelion.dto.mapper.IProductMapper;
 import org.example.likelion.dto.request.AIRecommendationRequest;
 import org.example.likelion.dto.response.AIRecommendationResponse;
@@ -73,7 +75,7 @@ public class AIServiceImpl implements AIService {
     }
 
     @Override
-    public GeminiAIResponse getRecommendation(GeminiAIRequest geminiAIRequest) {
+    public GeminiAIResponseDTO getRecommendation(GeminiAIRequest geminiAIRequest) {
         if (geminiAIRequest.getContents().size() <= 1) {
             List<String> categories = productRepository.findProductCategories();
             List<String> colors = productRepository.findProductColors();
@@ -98,30 +100,23 @@ public class AIServiceImpl implements AIService {
                 .addModule(new JavaTimeModule())
                 .build();
 
-        JsonRecommendReturnType recommendation = null;
+        JsonRecommendReturnType jsonRecommendReturnType = null;
         try {
-            recommendation = objectMapper.readValue(afterReplace, JsonRecommendReturnType.class);
+            jsonRecommendReturnType = objectMapper.readValue(afterReplace, JsonRecommendReturnType.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        assert recommendation != null;
+        assert jsonRecommendReturnType != null;
         List<ProductResponse> productsRecommendationRp = new ArrayList<>();
         for (Product product : productRepository
-                .findAllByFilter(recommendation.getShoesTypes() == null ? null : recommendation.getShoesTypes().stream().map(String::toUpperCase).toList()
-                        , recommendation.getColors() == null ? null : recommendation.getColors().stream().map(String::toUpperCase).toList(), pageable)) {
+                .findAllByFilter(jsonRecommendReturnType.getShoesTypes() == null ? null : jsonRecommendReturnType.getShoesTypes().stream().map(String::toUpperCase).toList()
+                        , jsonRecommendReturnType.getColors() == null ? null : jsonRecommendReturnType.getColors().stream().map(String::toUpperCase).toList(), pageable)) {
             ProductResponse dtoResponse = iProductMapper.toDtoResponse(product);
             productsRecommendationRp.add(dtoResponse);
         }
-        recommendation.setProductsRecommend(productsRecommendationRp);
-        String jsonString = "";
-        try {
-            jsonString = objectMapper.writeValueAsString(recommendation);
-            System.out.println(jsonString);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        contentRs.getParts().get(0).setText(jsonString);
-        rs.getCandidates().get(0).setContent(contentRs);
-        return rs;
+        jsonRecommendReturnType.setProductsRecommend(productsRecommendationRp);
+        GeminiAIResponseDTO geminiAIResponseDTO = IGeminiAIMapper.INSTANCE.toDtoResponse(rs);
+        geminiAIResponseDTO.getCandidates().get(0).getContent().getParts().get(0).setJsonRecommendReturnType(jsonRecommendReturnType);
+        return geminiAIResponseDTO;
     }
 }
