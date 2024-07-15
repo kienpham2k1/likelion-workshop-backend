@@ -1,11 +1,13 @@
 package org.example.likelion.service.payment;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.likelion.config.PaymentConfig;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -121,6 +123,29 @@ public class PaymentServiceImpl implements PaymentService {
             }
         } else {
             return -1;
+        }
+    }
+
+    @Override
+    public void getMapping(HttpServletRequest request, HttpServletResponse response) {
+        int paymentStatus = orderReturn(request);
+
+        String orderInfo = request.getParameter("vnp_OrderInfo");
+        String paymentTime = request.getParameter("vnp_PayDate");
+        String transactionId = request.getParameter("vnp_TransactionNo");
+        String totalPrice = request.getParameter("vnp_Amount");
+
+        try {
+            response.sendRedirect("http://localhost:5173/order/status" +
+                    "?status=" + (paymentStatus == 1) +
+                    "&vnp_OrderInfo=" + orderInfo +
+                    "&vnp_PayDate=" + paymentTime +
+                    "&vnp_TransactionNo=" + transactionId +
+                    "&vnp_Amount=" + totalPrice);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+
         }
     }
 }

@@ -5,12 +5,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.response.UrlResponse;
-import org.example.likelion.repository.OrderRepository;
 import org.example.likelion.service.OrderService;
 import org.example.likelion.service.payment.PaymentService;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +16,6 @@ import java.io.IOException;
 public class PaymentController {
     private final PaymentService paymentService;
     private final OrderService orderService;
-    private final OrderRepository orderRepository;
 
     @PostMapping("/submitOrder")
     public UrlResponse submitOrder(
@@ -32,24 +28,7 @@ public class PaymentController {
     }
 
     @GetMapping("/vnpay-payment")
-    public void GetMapping(HttpServletRequest request, HttpServletResponse response) {
-        int paymentStatus = paymentService.orderReturn(request);
-
-        String orderInfo = request.getParameter("vnp_OrderInfo");
-        String paymentTime = request.getParameter("vnp_PayDate");
-        String transactionId = request.getParameter("vnp_TransactionNo");
-        String totalPrice = request.getParameter("vnp_Amount");
-
-        try {
-            response.sendRedirect("http://localhost:5173/order/status" +
-                    "?status=" + (paymentStatus == 1) +
-                    "&vnp_OrderInfo=" + orderInfo +
-                    "&vnp_PayDate=" + paymentTime +
-                    "&vnp_TransactionNo=" + transactionId +
-                    "&vnp_Amount=" + totalPrice);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void getMapping(HttpServletRequest request, HttpServletResponse response) {
+        paymentService.getMapping(request, response);
     }
 }
