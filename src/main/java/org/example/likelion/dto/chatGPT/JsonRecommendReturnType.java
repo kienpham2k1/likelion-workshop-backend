@@ -27,4 +27,7 @@ public class JsonRecommendReturnType {
     @JsonProperty("productsRecommend")
     private List<ProductResponse> productsRecommend;
 
+    @JsonProperty("messageError")
+    private String messageError;
+
 }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.likelion.dto.chatGPT.*;
 import org.example.likelion.dto.chatGPT.dto.GeminiAIResponseDTO;
 import org.example.likelion.dto.mapper.IGeminiAIMapper;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AIServiceImpl implements AIService {
 
     @Value("${ai.endpoint}")
@@ -44,7 +46,6 @@ public class AIServiceImpl implements AIService {
     private final ProductRepository productRepository;
     private final IProductMapper iProductMapper;
     private String PROMPTS = "You are an AI assistant that recommends shoes based on the situation described by the user. " +
-            "If the user asks a question not related to shoes, respond with 'I am just a Shoes Recommendation Assistant.'." +
             "Interpret any gender, preferences, or location details as requests for shoe recommendations. " +
             "Recommend a maximum of 3 colors and 3 types. " +
             "But don't necessarily to recommend 3 all times. " +
@@ -53,7 +54,8 @@ public class AIServiceImpl implements AIService {
     private String PROMPT_RESPONSE_TYPE = "Respond in JSON format: ";
     private String PROMPT_CATEGORIES_SHOES = "Recommend shoes only from the following types: ";
     private String PROMPT_COLORS_SHOES = "Recommend shoes only from the following colors: ";
-    private String RETURN_JSON_FORMAT = "{colors: List[string], shoesTypes: List[shoesType], description: stri[ng, reasonToChooseThis: string}.";
+    private final String RETURN_JSON_FORMAT = "{colors: List[string], shoesTypes: List[shoesType], description: string, reasonToChooseThis: string}, messageError: null";
+    private final String ERROR_RESPONSE = "If the user asks a question not related to shoes, response with {colors: null, shoesTypes: null, description: null, reasonToChooseThis: null, messageError: \"I am just a Shoes Recommendation Assistant.\"}";
 
     @Override
     public AIRecommendationResponse getRecommendation(AIRecommendationRequest request) {
@@ -82,7 +84,7 @@ public class AIServiceImpl implements AIService {
             PROMPT_CATEGORIES_SHOES += categories.toString();
             PROMPT_COLORS_SHOES += colors.toString();
             PROMPT_RESPONSE_TYPE += RETURN_JSON_FORMAT;
-            PROMPTS += PROMPT_RESPONSE_TYPE + PROMPT_CATEGORIES_SHOES + PROMPT_COLORS_SHOES;
+            PROMPTS += PROMPT_RESPONSE_TYPE + PROMPT_CATEGORIES_SHOES + PROMPT_COLORS_SHOES + ERROR_RESPONSE;
             geminiAIRequest.getContents().add(0, new Content(Role.user, Collections.singletonList(new Part(PROMPTS))));
         }
         var rs = geminiApiUtils.getGeminiAIResponse(geminiAIRequest);
@@ -100,22 +102,25 @@ public class AIServiceImpl implements AIService {
                 .addModule(new JavaTimeModule())
                 .build();
 
+        GeminiAIResponseDTO geminiAIResponseDTO = IGeminiAIMapper.INSTANCE.toDtoResponse(rs);
         JsonRecommendReturnType jsonRecommendReturnType = null;
         try {
             jsonRecommendReturnType = objectMapper.readValue(afterReplace, JsonRecommendReturnType.class);
+
+            assert jsonRecommendReturnType != null;
+            if (jsonRecommendReturnType.getMessageError() == null) {
+                List<ProductResponse> productsRecommendationRp = new ArrayList<>();
+                for (Product product : productRepository
+                        .findAllByFilter(jsonRecommendReturnType.getShoesTypes() == null ? null : jsonRecommendReturnType.getShoesTypes().stream().map(String::toUpperCase).toList()
+                                , jsonRecommendReturnType.getColors() == null ? null : jsonRecommendReturnType.getColors().stream().map(String::toUpperCase).toList(), pageable)) {
+                    ProductResponse dtoResponse = iProductMapper.toDtoResponse(product);
+                    productsRecommendationRp.add(dtoResponse);
+                }
+                jsonRecommendReturnType.setProductsRecommend(productsRecommendationRp);
+            }
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
-        assert jsonRecommendReturnType != null;
-        List<ProductResponse> productsRecommendationRp = new ArrayList<>();
-        for (Product product : productRepository
-                .findAllByFilter(jsonRecommendReturnType.getShoesTypes() == null ? null : jsonRecommendReturnType.getShoesTypes().stream().map(String::toUpperCase).toList()
-                        , jsonRecommendReturnType.getColors() == null ? null : jsonRecommendReturnType.getColors().stream().map(String::toUpperCase).toList(), pageable)) {
-            ProductResponse dtoResponse = iProductMapper.toDtoResponse(product);
-            productsRecommendationRp.add(dtoResponse);
-        }
-        jsonRecommendReturnType.setProductsRecommend(productsRecommendationRp);
-        GeminiAIResponseDTO geminiAIResponseDTO = IGeminiAIMapper.INSTANCE.toDtoResponse(rs);
         geminiAIResponseDTO.getCandidates().get(0).getContent().getParts().get(0).setJsonRecommendReturnType(jsonRecommendReturnType);
         return geminiAIResponseDTO;
     }

@@ -14,8 +14,4 @@ public class PartDTO {
     private JsonRecommendReturnType jsonRecommendReturnType;
     @JsonProperty("inline_data")
     private InlineData inlineData;
-
-    public PartDTO(JsonRecommendReturnType jsonRecommendReturnType) {
-        this.jsonRecommendReturnType = jsonRecommendReturnType;
-    }
 }
