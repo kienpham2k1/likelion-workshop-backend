@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.mapper.IRoomChatMapper;
 import org.example.likelion.dto.request.RoomChatRequest;
 import org.example.likelion.dto.response.RoomChatResponse;
+import org.example.likelion.model.RoomChat;
 import org.example.likelion.service.websocket.RoomChatService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,11 +29,11 @@ public class RoomChatController {
         return roomChatService.gets(pageable).map(IRoomChatMapper.INSTANCE::toDtoResponse);
     }
 
-//    @PostMapping("/create")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public void createRoomChat(@RequestBody RoomChatRequest roomChatRequest) {
-//        roomChatService.create(IRoomChatMapper.INSTANCE.toEntity(roomChatRequest));
-//    }
+    @PostMapping("/create/{userId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createRoomChat(@PathVariable String userId) {
+        roomChatService.createRoomChatWithUser(userId, new RoomChat());
+    }
 
     @GetMapping("/user/getRoomChat")
     @ResponseStatus(HttpStatus.CREATED)
