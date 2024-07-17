@@ -29,7 +29,10 @@ public class RoomChatServiceImpl implements RoomChatService {
     public Page<RoomChat> gets(Pageable pageable) {
         UserDetailsImpl userDetails = authenticationService.getCurrentUser().get();
         if (userDetails.getRole().equals(Role.ADMIN)) return roomChatRepository.findAll(pageable);
-        else return roomChatRepository.findRoomChatByUserId(userDetails.getId(), pageable);
+        else {
+            createRoomChat();
+            return roomChatRepository.findRoomChatByUserId(userDetails.getId(), pageable);
+        }
     }
 
     @Override
@@ -39,6 +42,15 @@ public class RoomChatServiceImpl implements RoomChatService {
 
     @Override
     public void create(RoomChat roomChat) {
+        roomChatRepository.save(roomChat);
+    }
+
+    @Override
+
+    public void createRoomChatWithUser(String userId, RoomChat roomChat) {
+        roomChat.setUser(userRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND)));
+        roomChat.setCreatedDate(LocalDate.now());
         roomChatRepository.save(roomChat);
     }
 
