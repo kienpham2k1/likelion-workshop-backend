@@ -50,12 +50,14 @@ public class AIServiceImpl implements AIService {
             "Recommend a maximum of 3 colors and 3 types. " +
             "But don't necessarily to recommend 3 all times. " +
             "If the user uploads an image, interpret it as their outfit and recommend suitable shoes. " +
-            "Please describe their outfit a little bit. ";
+            "If the user uploads text and image, prioritize the use of image to suggest to users" +
+            "You must return an response to me, do not return nothing" +
+            "Please describe their outfit a little bit.";
     private String PROMPT_RESPONSE_TYPE = "Respond in JSON format: ";
     private String PROMPT_CATEGORIES_SHOES = "Recommend shoes only from the following types: ";
     private String PROMPT_COLORS_SHOES = "Recommend shoes only from the following colors: ";
-    private final String RETURN_JSON_FORMAT = "{colors: List[string], shoesTypes: List[shoesType], description: string, reasonToChooseThis: string}, messageError: null";
-    private final String ERROR_RESPONSE = "If the user asks a question not related to shoes, response with {colors: null, shoesTypes: null, description: null, reasonToChooseThis: null, messageError: \"I am just a Shoes Recommendation Assistant.\"}";
+    private final String RETURN_JSON_FORMAT = "{\"colors\": List[string], \"shoesTypes\": List[shoesType], \"description\": string, \"reasonToChooseThis\": string}, \"messageError\": null";
+    private final String ERROR_RESPONSE = "If the user asks a question not related to shoes, response with {\"colors\": null, \"shoesTypes\": null, \"description\": null, \"reasonToChooseThis\": null, \"messageError\": \"I am just a Shoes Recommendation Assistant.\"}";
 
     @Override
     public AIRecommendationResponse getRecommendation(AIRecommendationRequest request) {
