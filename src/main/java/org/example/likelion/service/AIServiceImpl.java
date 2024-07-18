@@ -78,15 +78,13 @@ public class AIServiceImpl implements AIService {
 
     @Override
     public GeminiAIResponseDTO getRecommendation(GeminiAIRequest geminiAIRequest) {
-        if (geminiAIRequest.getContents().size() <= 1) {
-            List<String> categories = productRepository.findProductCategories();
-            List<String> colors = productRepository.findProductColors();
-            PROMPT_CATEGORIES_SHOES += categories.toString();
-            PROMPT_COLORS_SHOES += colors.toString();
-            PROMPT_RESPONSE_TYPE += RETURN_JSON_FORMAT;
-            PROMPTS += PROMPT_RESPONSE_TYPE + PROMPT_CATEGORIES_SHOES + PROMPT_COLORS_SHOES + ERROR_RESPONSE;
-            geminiAIRequest.getContents().add(0, new Content(Role.user, Collections.singletonList(new Part(PROMPTS))));
-        }
+        List<String> categories = productRepository.findProductCategories();
+        List<String> colors = productRepository.findProductColors();
+        PROMPT_CATEGORIES_SHOES += categories.toString();
+        PROMPT_COLORS_SHOES += colors.toString();
+        PROMPT_RESPONSE_TYPE += RETURN_JSON_FORMAT;
+        PROMPTS += PROMPT_RESPONSE_TYPE + PROMPT_CATEGORIES_SHOES + PROMPT_COLORS_SHOES + ERROR_RESPONSE;
+        geminiAIRequest.getContents().add(0, new Content(Role.user, Collections.singletonList(new Part(PROMPTS))));
         var rs = geminiApiUtils.getGeminiAIResponse(geminiAIRequest);
         Content contentRs = rs.getCandidates().get(0).getContent();
         String textRS = contentRs.getParts().get(0).getText();
