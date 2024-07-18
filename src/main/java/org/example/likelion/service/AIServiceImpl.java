@@ -50,9 +50,9 @@ public class AIServiceImpl implements AIService {
             "Recommend a maximum of 3 colors and 3 types. " +
             "But don't necessarily to recommend 3 all times. " +
             "If the user uploads an image, interpret it as their outfit and recommend suitable shoes. " +
-            "If the user uploads text and image, prioritize the use of image to suggest to users" +
             "You must return an response to me, do not return nothing" +
             "Please describe their outfit a little bit." +
+            "The reason To Choose This in the response must depend on image and text user send." +
             "Please never response the null message, if you got some error please response the error message";
     private String PROMPT_RESPONSE_TYPE = "Respond in JSON format: ";
     private String PROMPT_CATEGORIES_SHOES = "Recommend shoes only from the following types: ";
