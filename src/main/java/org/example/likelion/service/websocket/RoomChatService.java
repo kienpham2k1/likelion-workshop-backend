@@ -12,5 +12,7 @@ public interface RoomChatService {
 
     void create(RoomChat roomChat);
 
+    void createRoomChatWithUser(String userId, RoomChat roomChat);
+
     RoomChat getRoomChatUser();
 }
