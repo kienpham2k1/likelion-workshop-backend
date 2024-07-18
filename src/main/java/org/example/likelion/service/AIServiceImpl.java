@@ -52,7 +52,8 @@ public class AIServiceImpl implements AIService {
             "If the user uploads an image, interpret it as their outfit and recommend suitable shoes. " +
             "If the user uploads text and image, prioritize the use of image to suggest to users" +
             "You must return an response to me, do not return nothing" +
-            "Please describe their outfit a little bit.";
+            "Please describe their outfit a little bit." +
+            "Please never response the null message, if you got some error please response the error message";
     private String PROMPT_RESPONSE_TYPE = "Respond in JSON format: ";
     private String PROMPT_CATEGORIES_SHOES = "Recommend shoes only from the following types: ";
     private String PROMPT_COLORS_SHOES = "Recommend shoes only from the following colors: ";
