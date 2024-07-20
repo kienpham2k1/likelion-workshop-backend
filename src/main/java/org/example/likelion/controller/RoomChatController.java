@@ -2,7 +2,6 @@ package org.example.likelion.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.mapper.IRoomChatMapper;
-import org.example.likelion.dto.request.RoomChatRequest;
 import org.example.likelion.dto.response.RoomChatResponse;
 import org.example.likelion.model.RoomChat;
 import org.example.likelion.service.websocket.RoomChatService;

@@ -1,7 +1,6 @@
 package org.example.likelion.dto.chatGPT.dto;
 
 import lombok.*;
-import org.example.likelion.dto.chatGPT.Part;
 import org.example.likelion.dto.chatGPT.Role;
 
 import java.util.List;

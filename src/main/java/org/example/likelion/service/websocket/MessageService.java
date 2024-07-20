@@ -1,6 +1,5 @@
 package org.example.likelion.service.websocket;
 
-import org.example.likelion.dto.response.MessageResponse;
 import org.example.likelion.model.Message;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
