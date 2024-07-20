@@ -34,7 +34,7 @@ public class ChatController {
         AbstractAuthenticationToken authenticationToken = (AbstractAuthenticationToken) headerAccessor.getUser();
         UserDetailsImpl userDetails = (UserDetailsImpl) Objects.requireNonNull(authenticationToken).getPrincipal();
         Message e = IMessageMapper.INSTANCE.toEntity(message);
-       if(userDetails.getRole() == Role.USER) {
+        if (userDetails.getRole() == Role.USER) {
             e.setUserId(userDetails.getId());
         }
         var msi = messageService.create(roomId, e);

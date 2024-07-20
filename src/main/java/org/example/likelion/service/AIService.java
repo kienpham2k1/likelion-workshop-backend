@@ -7,6 +7,7 @@ import org.example.likelion.dto.response.AIRecommendationResponse;
 
 public interface AIService {
     AIRecommendationResponse getRecommendation(AIRecommendationRequest request);
+
     GeminiAIResponseDTO getRecommendation(GeminiAIRequest geminiAIRequest);
 
 }

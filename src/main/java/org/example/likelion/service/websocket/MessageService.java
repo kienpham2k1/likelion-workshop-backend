@@ -10,6 +10,7 @@ public interface MessageService {
     List<Message> gets(String roomId);
 
     Message create(String roomId, Message message);
+
     Message get(String messageId);
 
     Page<Message> gets(String roomChatId, Pageable pageable);

@@ -185,7 +185,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 return Optional.of(userResponse);
             }
         }
-        
+
         return Optional.empty();
     }
 

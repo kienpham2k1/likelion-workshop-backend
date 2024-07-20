@@ -8,7 +8,8 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface IGeminiAIMapper {
     IGeminiAIMapper INSTANCE = Mappers.getMapper(IGeminiAIMapper.class);
-//    @Mapping(ignore = true, target = "candidates.content")
+
+    //    @Mapping(ignore = true, target = "candidates.content")
     GeminiAIResponseDTO toDtoResponse(GeminiAIResponse entity);
 
 
