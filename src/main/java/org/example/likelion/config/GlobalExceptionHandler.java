@@ -30,9 +30,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     // 404
-    @ExceptionHandler({ResourceNotFoundException.class
-            , EntityNotFoundException.class
-            , OutOfStockProductException.class})
+    @ExceptionHandler({ResourceNotFoundException.class, EntityNotFoundException.class, OutOfStockProductException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public <T extends RuntimeException> ErrorResponseEntity resourceNotFoundExceptionHandler(T ex, WebRequest request) {
         ErrorResponseEntity errorResponse = ErrorResponseEntity.builder()
