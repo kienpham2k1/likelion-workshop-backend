@@ -3,6 +3,7 @@ package org.example.likelion.dto.response;
 import lombok.*;
 
 import java.util.List;
+
 @Data
 @Getter
 @Setter

@@ -39,6 +39,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
                                   Pageable pageable);
 
     List<Product> findAllByName(String productName);
+
     @Query(value = "select p.category.name from Product p group by p.category.name")
     List<String> findProductCategories();
 

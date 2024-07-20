@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/ai-recommendation")
 public class AIRecommendationController {
     private final AIService aiService;
+
     @PostMapping("/ask")
     @ResponseStatus(HttpStatus.OK)
     public GeminiAIResponseDTO getRecommendation(@RequestBody GeminiAIRequest geminiAIRequest) {
-       return aiService.getRecommendation(geminiAIRequest);
+        return aiService.getRecommendation(geminiAIRequest);
     }
 }

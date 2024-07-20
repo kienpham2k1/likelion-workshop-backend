@@ -3,6 +3,7 @@ package org.example.likelion.dto.chatGPT;
 import lombok.*;
 
 import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor

@@ -7,8 +7,6 @@ import org.example.likelion.exception.EntityNotFoundException;
 import org.example.likelion.model.Category;
 import org.example.likelion.repository.CategoryRepository;
 import org.example.likelion.service.CategoryService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +21,6 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findAll();
     }
 
-    @Override
-    public Page<Category> gets(String name, Pageable pageable) {
-//        return categoryRepository.findByNameIsContainingIgnoreCase(name, pageable);
-        return null;
-    }
 
     @Override
     public Category get(String id) {

@@ -6,7 +6,6 @@ import org.example.likelion.config.security.jwtConfig.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -20,12 +19,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import static org.example.likelion.dto.auth.Role.ADMIN;
 import static org.example.likelion.dto.auth.Role.USER;
-import static org.springframework.http.HttpMethod.*;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -54,7 +52,7 @@ public class SecurityConfiguration {
             "/api/v1/ai-recommendation/**",
             "/api/v1/admin/**",
             "/api/v1/payment/vnpay-payment"
-            ,"/ws/**"
+            , "/ws/**"
     };
 
     @Bean
@@ -88,58 +86,18 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req.requestMatchers(WHITE_LIST_URL)
                         .permitAll()
-                        .requestMatchers(GET, "/api/v1/product/**")
-                        .permitAll()
-                        .requestMatchers(GET, "/api/v1/category/**")
-                        .permitAll()
-                        .requestMatchers("/api/v1/voucher/**")
-                        .permitAll()
-                        .requestMatchers("/api/v1/otp/**")
-                        .permitAll()
-                        .requestMatchers("/api/v1/user/**")
-                        .authenticated()
-                        .requestMatchers(
-                                request -> {
-                                    return request.getMethod().equals(GET.toString()) ||
-                                            request.getMethod().equals(PUT.toString()) ||
-                                            request.getMethod().equals(PUT.toString()) ||
-                                            request.getMethod().equals(DELETE.toString());
-                                },
-                                new AntPathRequestMatcher("/api/v1/order-detail/**"))
-                        .authenticated()
-                        .requestMatchers(
-                                request -> {
-                                    return request.getMethod().equals(GET.toString()) ||
-                                            request.getMethod().equals(POST.toString()) ||
-                                            request.getMethod().equals(PUT.toString()) ||
-                                            request.getMethod().equals(DELETE.toString());
-                                },
-                                new AntPathRequestMatcher("/api/v1/order/**"))
-                        .hasAnyRole(USER.name(), ADMIN.name())
-//                        .requestMatchers(
-//                                new AntPathRequestMatcher("/api/v1/product/**", HttpMethod.POST.toString()),
-//                                new AntPathRequestMatcher("/api/v1/product/**", HttpMethod.PUT.toString()),
-//                                new AntPathRequestMatcher("/api/v1/product/**", HttpMethod.DELETE.toString())
-//                        ).hasRole(ADMIN.name())
-                        .requestMatchers(
-                                request -> {
-                                    return request.getMethod().equals(HttpMethod.POST.toString()) ||
-                                            request.getMethod().equals(HttpMethod.PUT.toString()) ||
-                                            request.getMethod().equals(HttpMethod.DELETE.toString());
-                                },
-                                new AntPathRequestMatcher("/api/v1/product/**"))
-                        .hasRole(ADMIN.name())
-                        .requestMatchers(
-                                request -> {
-                                    return request.getMethod().equals(HttpMethod.POST.toString()) ||
-                                            request.getMethod().equals(HttpMethod.PUT.toString()) ||
-                                            request.getMethod().equals(HttpMethod.DELETE.toString());
-                                },
-                                new AntPathRequestMatcher("/api/v1/category/**"))
-                        .hasRole(ADMIN.name())
-
+                        .requestMatchers(GET, "/api/v1/product/**").permitAll()
+                        .requestMatchers(GET, "/api/v1/category/**").permitAll()
+                        .requestMatchers("/api/v1/voucher/**").permitAll()
+                        .requestMatchers("/api/v1/otp/**").permitAll()
+                        .requestMatchers("/api/v1/user/**").authenticated()
+                        .requestMatchers("/api/v1/order-detail/**").authenticated()
+                        .requestMatchers("/api/v1/order/**").hasAnyRole(USER.name(), ADMIN.name())
+                        .requestMatchers("/api/v1/product/**").hasRole(ADMIN.name())
+                        .requestMatchers("/api/v1/category/**").hasRole(ADMIN.name())
                         .anyRequest()
                         .authenticated())
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())

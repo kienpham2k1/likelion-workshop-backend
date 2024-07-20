@@ -12,5 +12,6 @@ import java.util.Optional;
 @Repository
 public interface RoomChatRepository extends JpaRepository<RoomChat, String> {
     Optional<RoomChat> findByUserId(String id);
+
     Page<RoomChat> findRoomChatByUserId(String id, Pageable pageable);
 }

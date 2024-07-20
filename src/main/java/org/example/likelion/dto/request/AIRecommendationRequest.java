@@ -2,8 +2,6 @@ package org.example.likelion.dto.request;
 
 import lombok.*;
 
-import java.util.List;
-
 @Data
 @Getter
 @Setter
