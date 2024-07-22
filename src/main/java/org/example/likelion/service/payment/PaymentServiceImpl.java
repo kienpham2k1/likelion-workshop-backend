@@ -136,7 +136,7 @@ public class PaymentServiceImpl implements PaymentService {
         String totalPrice = request.getParameter("vnp_Amount");
 
         try {
-            response.sendRedirect("http://localhost:5173/order/status" +
+            response.sendRedirect("https://shoestore-fe.vercel.app/order/status" +
                     "?status=" + (paymentStatus == 1) +
                     "&vnp_OrderInfo=" + orderInfo +
                     "&vnp_PayDate=" + paymentTime +
