@@ -2,7 +2,6 @@ package org.example.likelion.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.mapper.IMessageMapper;
-import org.example.likelion.dto.request.MessageRequest;
 import org.example.likelion.dto.response.MessageResponse;
 import org.example.likelion.service.websocket.MessageService;
 import org.springframework.data.domain.Page;

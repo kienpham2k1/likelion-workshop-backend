@@ -28,9 +28,13 @@ public class RoomChatServiceImpl implements RoomChatService {
     @Override
     public Page<RoomChat> gets(Pageable pageable) {
         UserDetailsImpl userDetails = authenticationService.getCurrentUser().get();
-        if (userDetails.getRole().equals(Role.ADMIN)) return roomChatRepository.findAll(pageable);
+        if (userDetails.getRole().equals(Role.ADMIN))
+            return roomChatRepository.findAll(pageable);
         else {
-            createRoomChat();
+            Page<RoomChat> userRoomChat = roomChatRepository.findRoomChatByUserId(userDetails.getId(), pageable);
+            if (userRoomChat.getContent().isEmpty()) {
+                createRoomChat();
+            }
             return roomChatRepository.findRoomChatByUserId(userDetails.getId(), pageable);
         }
     }

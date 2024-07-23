@@ -5,8 +5,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 
-import java.util.Set;
-
 @Entity
 @Table(name = "order_detail")
 @Getter

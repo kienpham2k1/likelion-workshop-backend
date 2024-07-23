@@ -1,9 +1,10 @@
 package org.example.likelion.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-import org.example.likelion.model.Admin;
-import org.example.likelion.model.User;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -14,6 +14,7 @@ public interface IUserMapper {
     IUserMapper INSTANCE = Mappers.getMapper(IUserMapper.class);
 
     UserResponse toDtoResponse(User user);
+
     @Mapping(target = "verify", ignore = true)
     @Mapping(target = "phoneNumber", ignore = true)
     @Mapping(target = "email", ignore = true)
