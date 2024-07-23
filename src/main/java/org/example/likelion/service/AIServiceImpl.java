@@ -12,7 +12,6 @@ import org.example.likelion.dto.chatGPT.*;
 import org.example.likelion.dto.chatGPT.dto.GeminiAIResponseDTO;
 import org.example.likelion.dto.mapper.IGeminiAIMapper;
 import org.example.likelion.dto.mapper.IProductMapper;
-import org.example.likelion.dto.request.AIRecommendationRequest;
 import org.example.likelion.dto.response.AIRecommendationResponse;
 import org.example.likelion.dto.response.ProductResponse;
 import org.example.likelion.model.Product;
@@ -61,7 +60,7 @@ public class AIServiceImpl implements AIService {
     private final String ERROR_RESPONSE = "If the user asks a question not related to shoes, response with {\"colors\": null, \"shoesTypes\": null, \"description\": null, \"reasonToChooseThis\": null, \"messageError\": \"I am just a Shoes Recommendation Assistant.\"}";
 
     @Override
-    public AIRecommendationResponse getRecommendation(AIRecommendationRequest request) {
+    public AIRecommendationResponse getRecommendation(String request) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("accept", "application/json");
