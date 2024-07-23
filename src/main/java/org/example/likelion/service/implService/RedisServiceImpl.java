@@ -7,12 +7,14 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.likelion.dto.chatGPT.dto.GeminiAIResponseDTO;
 import org.example.likelion.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RedisServiceImpl implements RedisService {
@@ -31,7 +33,7 @@ public class RedisServiceImpl implements RedisService {
             String jsonValue = objectMapper.writeValueAsString(value);
             redisTemplate.opsForValue().set(key, jsonValue);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("context", e);
         }
     }
 
@@ -44,9 +46,9 @@ public class RedisServiceImpl implements RedisService {
         try {
             return objectMapper.readValue(value, GeminiAIResponseDTO.class);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("context", e);
         }
-        
+
         return null;
     }
 }
