@@ -181,6 +181,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 } else {
                     Admin adminInfo = adminRepository.findByUsername(userDetails.getUsername()).orElseThrow();
                     userResponse = IUserMapper.INSTANCE.toDtoResponse(adminInfo);
+                    userResponse.setVerify(true);
                 }
                 return Optional.of(userResponse);
             }
