@@ -1,5 +1,6 @@
 package org.example.likelion.service.implService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.constant.ErrorMessage;
 import org.example.likelion.dto.auth.Role;
@@ -19,8 +20,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -60,10 +68,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order create(Order order) {
-        var voucher = voucherRepository.findVoucherByIdAndActiveIsTrueAndQuantityGreaterThan(order.getVoucherId());
-        if (voucher == null) {
-            throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_VOUCHER);
-        }
         UserDetailsImpl userDetails = authenticationService.getCurrentUser().orElseThrow(() -> new EntityNotFoundException(ErrorMessage.USER_NOT_FOUND));
         order.setCreateDate(LocalDate.now());
         order.getOrderDetails().forEach(e -> {
@@ -71,7 +75,15 @@ public class OrderServiceImpl implements OrderService {
                 throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_PRODUCT);
         });
         order.setUserId(userDetails.getId());
-        voucherService.reduce(order.getVoucherId());
+
+        if (order.getVoucherId() != null) {
+            var voucher = voucherRepository.findVoucherByIdAndActiveIsTrueAndQuantityGreaterThan(order.getVoucherId());
+            if (voucher == null) {
+                throw new OutOfStockProductException(ErrorMessage.OUT_OF_STOCK_VOUCHER);
+            }
+            voucherService.reduce(order.getVoucherId());
+        }
+
         Order o = orderRepository.save(order);
         order.getOrderDetails().forEach(e -> {
             e.setOrderId(o.getId());
@@ -97,11 +109,47 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Order updatePayment(String id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
+        if (!isValidResourceForUser(order.getUserId()))
+            throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
+        order.setPaid(true);
+        return orderRepository.save(order);
+    }
+
+    @Override
     public void cancel(String id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(ErrorMessage.ORDER_NOT_FOUND));
         if (!isValidResourceForUser(order.getUserId()))
             throw new AccessDeniedException(ErrorMessage.USER_ACCESS_DENIED);
         order.setCancel(true);
         orderRepository.save(order);
+    }
+
+    @Override
+    public void exportMonthlyReport(HttpServletResponse response) {
+        response.setContentType("text/csv");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=order_completed_" + currentDateTime + ".csv";
+        response.setHeader(headerKey, headerValue);
+
+        List<Order> orderList = orderRepository.findAll();
+        try {
+            ICsvBeanWriter csvWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
+            String[] csvHeader = {"Order ID", "User ID", "Total cost", "Phone Number", "Address", "Create Date", "Status", "Is Cancel", "Is Online Payment", "Is Paid"};
+            String[] nameMapping = {"id", "userId", "total", "phoneNumber", "addressLine", "createDate", "orderStatus", "cancel", "cancel", "paid",};
+            csvWriter.writeHeader(csvHeader);
+
+            for (Order order : orderList) {
+                csvWriter.write(order, nameMapping);
+            }
+
+            csvWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

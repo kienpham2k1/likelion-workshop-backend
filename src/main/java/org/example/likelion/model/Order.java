@@ -36,13 +36,18 @@ public class Order {
     @Column(name = "order_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.RECEIVED;
-    private boolean isCancel;
+    @Column(name = "is_cancel", nullable = false)
+    private boolean cancel;
+    @Column(name = "is_online_payment", nullable = false)
+    private boolean onlinePayment;
+    @Column(name = "is_paid", nullable = false)
+    private boolean paid;
     @OneToMany(mappedBy = "order")
     private Set<OrderDetail> orderDetails;
-    @Column(name = "voucher_id", nullable = false)
+    @Column(name = "voucher_id", nullable = true)
     private String voucherId;
     @ManyToOne
-    @JoinColumn(name = "voucher_id", referencedColumnName = "voucher_id", insertable = false, updatable = false)
+    @JoinColumn(name = "voucher_id", referencedColumnName = "voucher_id", insertable = false, updatable = false, nullable = true)
     private Voucher voucher;
     @Column(name = "user_id", nullable = false)
     private String userId;

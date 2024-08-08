@@ -12,13 +12,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -30,9 +30,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     // 404
-    @ExceptionHandler({ResourceNotFoundException.class
-            , EntityNotFoundException.class
-            , OutOfStockProductException.class})
+    @ExceptionHandler({ResourceNotFoundException.class, EntityNotFoundException.class, OutOfStockProductException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public <T extends RuntimeException> ErrorResponseEntity resourceNotFoundExceptionHandler(T ex, WebRequest request) {
         ErrorResponseEntity errorResponse = ErrorResponseEntity.builder()

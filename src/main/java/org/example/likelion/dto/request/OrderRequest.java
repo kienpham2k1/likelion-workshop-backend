@@ -33,4 +33,9 @@ public class OrderRequest {
     @Valid
     private List<OrderDetailRequest> orderDetails;
     private String voucherId;
+    @JsonIgnore
+    private boolean cancel = false;
+    @JsonIgnore
+    private boolean paid = false;
+    private boolean onlinePayment;
 }

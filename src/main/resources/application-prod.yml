@@ -45,3 +45,18 @@ infobip:
 mail:
   mail_address: ${MAIL_ADDRESS}
   mail_app_password: ${MAIL_APP_PW}
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
+    endpoint: ${GEMINI_API_ENDPOINT}
+vnpay:
+  vnp_PayUrl: ${VNPAY_PAY_URL}
+  vnp_ApiUrl: ${VNPAY_API_URL}
+  vnp_ReturnUrl: ${VNPAY_RETURN_URL}
+  vnp_TmnCode: ${VNPAY_TMN_CODE}
+  vnp_HashSecret: ${VNPAY_HASH_SECRET}
+redis:
+  redis_PublicEndpoint: ${REDIS_PUBLIC_ENDPOINT}
+  redis_Account: ${REDIS_ACCOUNT}
+  redis_Password: ${REDIS_PASSWORD}
+  redis_Port: ${REDIS_PORT}

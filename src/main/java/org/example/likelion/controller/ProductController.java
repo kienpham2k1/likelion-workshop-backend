@@ -28,6 +28,17 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
+    @Operation(summary = "Get Products paging")
+    @GetMapping("/getAll")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<ProductResponse> getAllProducts(@RequestParam(defaultValue = "0") Integer pageNo,
+                                                @RequestParam(defaultValue = "10") Integer pageSize,
+                                                @RequestParam(defaultValue = "asc") String sortDirection,
+                                                @RequestParam(defaultValue = "price") String sortBy) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(Sort.Direction.fromString(sortDirection), sortBy));
+        return productService.gets(pageable).map(IProductMapper.INSTANCE::toDtoResponse);
+    }
+
     @Operation(summary = "Get Product By Name")
     @GetMapping("/getList")
     @ResponseStatus(HttpStatus.OK)
@@ -67,7 +78,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Update Product")
-    @PutMapping(value =  "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable String id, @RequestPart(name = "product") @Valid ProductRequest request, @RequestPart(name = "img") MultipartFile img) {
         productService.update(id, request, img);
@@ -88,9 +99,10 @@ public class ProductController {
     }
 
     @Operation(summary = "update Product Price")
-    @PutMapping("/updateProductPrice/{id}")
+    @PutMapping("/updateProductPrice/{name}")
     @ResponseStatus(HttpStatus.OK)
     public void updateProductPrice(@PathVariable String name, @RequestBody @Valid UpdatePriceProductRequest request) {
         productService.updateProductPrice(name, request);
     }
+
 }

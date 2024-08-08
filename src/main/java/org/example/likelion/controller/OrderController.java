@@ -2,15 +2,15 @@ package org.example.likelion.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.likelion.dto.mapper.IOrderMapper;
 import org.example.likelion.dto.request.OrderRequest;
 import org.example.likelion.dto.response.OrderResponse;
 import org.example.likelion.enums.OrderStatus;
-import org.example.likelion.service.OrderDetailService;
+import org.example.likelion.model.Order;
 import org.example.likelion.service.OrderService;
-import org.example.likelion.service.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,8 +26,6 @@ import java.util.List;
 @Tag(name = "Order Resource")
 public class OrderController {
     private final OrderService orderService;
-    private final OrderDetailService orderDetailService;
-    private final ProductService productService;
 
     @Operation(summary = "Get Order List")
     @GetMapping("/getList")
@@ -56,16 +54,9 @@ public class OrderController {
 
     @Operation(summary = "Create Order")
     @PostMapping("/create")
-    public void create(@RequestBody @Valid OrderRequest request) {
-        orderService.create(IOrderMapper.INSTANCE.toEntity(request));
+    public Order create(@RequestBody @Valid OrderRequest request) {
+        return orderService.create(IOrderMapper.INSTANCE.toEntity(request));
     }
-
-//    @Operation(summary = "Update Order")
-//    @PutMapping("/update/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void update(@PathVariable String id, @RequestBody @Valid OrderRequest request) {
-//        orderService.update(id, IOrderMapper.INSTANCE.toEntity(request));
-//    }
 
     @Operation(summary = "Update Order")
     @PutMapping("/update-status/{id}")
@@ -74,10 +65,24 @@ public class OrderController {
         orderService.updateStatus(id, status);
     }
 
+    @Operation(summary = "Update Payment")
+    @PutMapping("/update-payment/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePayment(@PathVariable String id) {
+        orderService.updatePayment(id);
+    }
+
     @Operation(summary = "Cancel Order")
     @DeleteMapping("/cancel/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void create(@PathVariable String id) {
         orderService.cancel(id);
+    }
+
+    @Operation(summary = "Export report")
+    @GetMapping("/export-report")
+    @ResponseStatus(HttpStatus.OK)
+    public void exportMonthlyReport(HttpServletResponse response) {
+        orderService.exportMonthlyReport(response);
     }
 }

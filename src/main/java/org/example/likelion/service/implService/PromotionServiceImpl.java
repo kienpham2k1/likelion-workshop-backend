@@ -34,7 +34,7 @@ public class PromotionServiceImpl implements PromotionService {
 
     @Override
     public Promotion get(String id) {
-        return null;
+        return promotionRepository.findById(id).orElse(null);
     }
 
     @Override
